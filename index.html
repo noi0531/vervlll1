@@ -1,10 +1,10 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ja" x-data="app()" x-init="init()" class="antialiased">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title x-text="state.route==='home' ? data.meta.title : (state.route==='device' ? data.device.meta.title : data.exclusive.meta.title)">Verviii LP</title>
-  <meta name="description" :content="state.route==='home' ? data.meta.description : (state.route==='device' ? data.device.meta.description : data.exclusive.meta.description)">
+  <meta name="description" content="次世代の結果と収益化を両立する、サロン向けプロ機器＆専売品。直販・工場提携で高品質を適正価格で。" />
   <meta name="theme-color" content="#ffffff" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,194 +14,177 @@
 
   <style>
     :root{
-      --bg:#ffffff;
-      --card:#ffffff;
-      --ink:#0f172a;
-      --muted:#64748b;
-      --line:#e6eef8;
-      --accent-from:#7c3aed;
-      --accent-to:#06b6d4;
+      --bg:#ffffff; --card:#ffffff; --ink:#0f172a; --muted:#64748b; --line:#e6eef8;
+      --accent-from:#7c3aed; --accent-to:#06b6d4; --ring:#c7d2fe;
     }
     [x-cloak]{display:none!important}
-    /* small helpers for legacy CSS used in few places */
-    .shadow-soft{box-shadow:0 10px 30px rgba(2,6,23,.06)}
-    .glass{backdrop-filter: blur(10px); background: rgba(255,255,255,.6)}
-    /* for visually-hidden text (accessibility) */
-    .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+    body{background:var(--bg); color:var(--ink); font-family:'Noto Sans JP', system-ui, -apple-system, Segoe UI, Roboto,'Helvetica Neue', Arial}
+    .container{max-width:1120px; margin:0 auto; padding:0 1rem}
+    .shadow-soft{box-shadow:0 12px 36px rgba(2,6,23,.08)}
+    .glass{backdrop-filter: blur(12px); background: rgba(255,255,255,.65)}
+
+    /* ===== INTRO (HOME) ===== */
+    .intro{position:fixed; inset:0; z-index:100; display:grid; place-items:center; overflow:hidden; background:
+      radial-gradient(1200px 700px at 20% -10%, rgba(124,58,237,.12), transparent 55%),
+      radial-gradient(900px 600px at 80% 110%, rgba(6,182,212,.12), transparent 55%),
+      #fff}
+    .intro__grain::before{content:''; position:absolute; inset:0; pointer-events:none; opacity:.16; mix-blend:multiply; background:url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'160\' height=\'160\'><filter id=\'n\'><feTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'3\' stitchTiles=\'stitch\'/></filter><rect width=\'160\' height=\'160\' filter=\'url(%23n)\' opacity=\'0.4\'/></svg>') repeat}
+    .intro__ring{position:absolute; inset:-10%; border-radius:40px; background:conic-gradient(from 180deg, rgba(124,58,237,.25), rgba(6,182,212,.25), rgba(124,58,237,.25)); -webkit-mask:radial-gradient(circle at 50% 50%, transparent 45%, black 46%); mask:radial-gradient(circle at 50% 50%, transparent 45%, black 46%); filter:blur(20px); animation:ring 5.2s ease-in-out infinite alternate}
+    @keyframes ring{to{transform:rotate(20deg) scale(1.05); filter:blur(24px)}}
+    .intro__word{font-family:'Poppins',sans-serif; font-weight:900; font-size:clamp(40px,10vw,120px); letter-spacing:.02em; position:relative; display:inline-block; line-height:1}
+    .intro__word--gradient{background:linear-gradient(90deg,var(--accent-from),var(--accent-to)); -webkit-background-clip:text; background-clip:text; color:transparent; filter:drop-shadow(0 8px 28px rgba(124,58,237,.25))}
+    .intro__shine{position:absolute; inset:0; background:linear-gradient(120deg, transparent 0%, rgba(255,255,255,.8) 45%, transparent 60%); transform:skewX(-20deg) translateX(-120%); animation:shine 3s .9s ease forwards}
+    @keyframes shine{to{transform:skewX(-20deg) translateX(120%)}}
+    .intro__letters span{display:inline-block; opacity:0; transform:translateY(18px) scale(.98); animation:letter .7s ease forwards}
+    .intro__letters span:nth-child(1){animation-delay:.05s} .intro__letters span:nth-child(2){animation-delay:.12s} .intro__letters span:nth-child(3){animation-delay:.19s} .intro__letters span:nth-child(4){animation-delay:.26s} .intro__letters span:nth-child(5){animation-delay:.33s} .intro__letters span:nth-child(6){animation-delay:.40s} .intro__letters span:nth-child(7){animation-delay:.47s}
+    @keyframes letter{to{opacity:1; transform:none}}
+
+    /* ===== HERO ===== */
+    .hero{position:relative; height:100vh; overflow:hidden}
+    .hero img.bg{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0; transform:scale(1.06); transition:opacity 1s ease, transform 4.8s ease}
+    .hero img.bg.active{opacity:1; transform:scale(1)}
+    .hero .scrim{position:absolute; inset:0; background:linear-gradient(180deg, rgba(2,6,23,.35) 0%, rgba(2,6,23,.45) 60%, rgba(2,6,23,.25) 100%)}
+
+    /* Fancy gradient border */
+    .g-border{position:relative}
+    .g-border::before{content:''; position:absolute; inset:-1px; border-radius:18px; background:linear-gradient(90deg,var(--accent-from),var(--accent-to)); -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite:xor; mask-composite:exclude; padding:1px}
+
+    /* Reveal (scroll in) */
+    .reveal{opacity:0; transform:translateY(18px) scale(.98); filter:blur(6px); transition:all .8s cubic-bezier(.2,.65,.2,1)}
+    .reveal.in{opacity:1; transform:none; filter:blur(0)}
+
+    /* Marquee */
+    @keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+    .marquee{display:flex; gap:16px; animation:marquee 22s linear infinite}
   </style>
 </head>
-<body class="min-h-screen bg-[var(--bg)] text-[var(--ink)] font-sans">
 
-  <!-- Intro screens -->
-  <div x-cloak x-show="state.showIntroHome && state.route==='home'" class="fixed inset-0 z-50 grid place-items-center bg-gradient-to-b from-white to-slate-50">
+<body>
+  <!-- INTRO: HOME -->
+  <div x-cloak x-show="state.showIntroHome && state.route==='home'" class="intro intro__grain">
+    <div class="intro__ring"></div>
     <div class="text-center">
-      <img :src="data.brand.sampleLogoSquare" alt="Verviii ロゴ" class="mx-auto w-24 h-24 object-contain transform transition-all duration-700 scale-95 opacity-0" x-bind:class="{'opacity-100 scale-100': !state.showIntroHome}" />
-      <p class="mt-4 text-sm text-[var(--muted)]">Verviii を読み込み中…</p>
-    </div>
-  </div>
-
-  <div x-cloak x-show="state.showIntroDevice && state.route==='device'" class="fixed inset-0 z-50 grid place-items-center bg-gradient-to-b from-white to-slate-50">
-    <div class="text-center">
-      <img :src="data.device.brand.logo" alt="Photomedicell ロゴ" class="mx-auto w-24 h-24 object-contain" />
-      <p class="mt-4 text-sm text-[var(--muted)]">Photomedicell ページを準備中…</p>
-    </div>
-  </div>
-
-  <div x-cloak x-show="state.showIntroEx && state.route==='exclusive'" class="fixed inset-0 z-50 grid place-items-center bg-gradient-to-b from-white to-slate-50">
-    <div class="text-center">
-      <img :src="data.exclusive.brand.logo" alt="Exclusive ロゴ" class="mx-auto w-24 h-24 object-contain" />
-      <p class="mt-4 text-sm text-[var(--muted)]">専売品ページを準備中…</p>
-    </div>
-  </div>
-
-  <!-- Header -->
-  <header class="fixed inset-x-0 top-0 z-40 backdrop-blur bg-white/70 border-b" :class="{'shadow-sm': window.pageYOffset > 10}">
-    <div class="container mx-auto max-w-6xl px-4 py-3 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <button @click="backHome()" class="flex items-center gap-2 focus:outline-none" aria-label="ホームに戻る">
-          <img :src="state.route==='home' ? data.brand.sampleLogoSquare : (state.route==='device' ? data.device.brand.logo : data.exclusive.brand.logo)" alt="" class="w-9 h-9 object-contain">
-          <span class="hidden md:inline-block font-bold tracking-tight">Verviii</span>
-        </button>
+      <div class="intro__word intro__word--gradient intro__letters">
+        <span>V</span><span>e</span><span>r</span><span>v</span><span>i</span><span>i</span><span>i</span>
+        <div class="intro__shine"></div>
       </div>
+      <p class="mt-2 text-sm text-[var(--muted)]">Initialize design system…</p>
+    </div>
+  </div>
 
+  <!-- INTRO: DEVICE / EXCLUSIVE -->
+  <div x-cloak x-show="state.showIntroDevice && state.route==='device'" class="fixed inset-0 z-50 grid place-items-center bg-gradient-to-b from-white to-slate-50">
+    <div class="text-center"><img :src="data.device.brand.logo" class="mx-auto w-24 h-24 object-contain" alt="Photomedicell"><p class="mt-4 text-sm text-[var(--muted)]">Photomedicell ページを準備中…</p></div>
+  </div>
+  <div x-cloak x-show="state.showIntroEx && state.route==='exclusive'" class="fixed inset-0 z-50 grid place-items-center bg-gradient-to-b from-white to-slate-50">
+    <div class="text-center"><img :src="data.exclusive.brand.logo" class="mx-auto w-24 h-24 object-contain" alt="Exclusive"><p class="mt-4 text-sm text-[var(--muted)]">専売品ページを準備中…</p></div>
+  </div>
+
+  <!-- HEADER -->
+  <header class="fixed inset-x-0 top-0 z-40 backdrop-blur bg-white/70 border-b">
+    <div class="container py-3 flex items-center justify-between">
+      <button @click="backHome()" class="flex items-center gap-2" aria-label="ホームに戻る">
+        <img :src="state.route==='home' ? data.brand.sampleLogoSquare : (state.route==='device' ? data.device.brand.logo : data.exclusive.brand.logo)" class="w-9 h-9 object-contain" alt="logo">
+        <span class="hidden md:inline-block font-bold tracking-tight">Verviii</span>
+      </button>
       <nav class="hidden md:flex items-center gap-6 text-sm">
-        <template x-if="state.route === 'home'">
+        <template x-if="state.route==='home'">
           <div class="flex items-center gap-4">
             <button @click.prevent="scrollToId('equipments')" class="hover:underline">美容機器</button>
             <button @click.prevent="scrollToId('exclusives')" class="hover:underline">専売品</button>
-            <a :href="data.links.line" target="_blank" class="hover:underline">LINE</a>
+            <button @click.prevent="openLine()" class="hover:underline">LINE</button>
             <button @click.prevent="openContact()" class="hover:underline">問い合わせ</button>
           </div>
         </template>
-
-        <template x-if="state.route === 'device'">
+        <template x-if="state.route!=='home'">
           <div class="flex items-center gap-4">
-            <button @click.prevent="scrollToId('section-device-features')" class="hover:underline">機器紹介</button>
+            <button @click.prevent="scrollToId('section-intro')" class="hover:underline">商品紹介</button>
             <button @click.prevent="scrollToId('reasons')" class="hover:underline">選ばれる理由</button>
             <button @click.prevent="scrollToId('sales')" class="hover:underline">売上変化</button>
             <button @click.prevent="scrollToId('records')" class="hover:underline">導入実績</button>
+            <button @click.prevent="scrollToId('services')" class="hover:underline">その他サービス</button>
             <button @click.prevent="scrollToId('faq')" class="hover:underline">FAQ</button>
-            <button @click="backHome()" class="px-3 py-1 rounded-full border text-sm">戻る</button>
-          </div>
-        </template>
-
-        <template x-if="state.route === 'exclusive'">
-          <div class="flex items-center gap-4">
-            <button @click.prevent="scrollToId('ex-intro')" class="hover:underline">商品紹介</button>
-            <button @click.prevent="scrollToId('ex-commit')" class="hover:underline">こだわり</button>
-            <button @click.prevent="scrollToId('ex-faq')" class="hover:underline">FAQ</button>
-            <button @click="backHome()" class="px-3 py-1 rounded-full border text-sm">戻る</button>
+            <button class="px-3 py-1 rounded-full border" @click="backHome()">← 戻る</button>
           </div>
         </template>
       </nav>
-
-      <!-- Mobile menu -->
       <div class="md:hidden flex items-center gap-2">
-        <button @click="openContact()" aria-label="問い合わせ" class="p-2 rounded-md hover:bg-slate-100">
+        <button @click="openContact()" class="p-2 rounded-md hover:bg-slate-100" aria-label="問い合わせ">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8m-18 8v-8a2 2 0 012-2h14a2 2 0 012 2v8"/></svg>
         </button>
-        <button @click="state.mobileNav = !state.mobileNav" :aria-expanded="state.mobileNav" aria-label="メニュー" class="p-2 rounded-md hover:bg-slate-100">
+        <button @click="state.mobileNav=!state.mobileNav" class="p-2 rounded-md hover:bg-slate-100" aria-label="メニュー">
           <svg x-show="!state.mobileNav" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"/></svg>
           <svg x-show="state.mobileNav" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
         </button>
       </div>
     </div>
-
-    <!-- mobile nav panel -->
     <div x-cloak x-show="state.mobileNav" x-transition class="md:hidden border-t bg-white/95">
-      <div class="px-4 py-3 space-y-2">
-        <template x-if="state.route === 'home'">
-          <div class="flex flex-col gap-2">
-            <button @click.prevent="state.mobileNav=false; scrollToId('equipments')" class="text-left">美容機器</button>
-            <button @click.prevent="state.mobileNav=false; scrollToId('exclusives')" class="text-left">専売品</button>
-            <a @click="state.mobileNav=false" :href="data.links.line" class="text-left" target="_blank">LINE</a>
-            <button @click.prevent="state.mobileNav=false; openContact()" class="text-left">問い合わせ</button>
-          </div>
-        </template>
-
-        <template x-if="state.route === 'device'">
-          <div class="flex flex-col gap-2">
-            <button @click.prevent="state.mobileNav=false; scrollToId('section-device-features')" class="text-left">機器紹介</button>
-            <button @click.prevent="state.mobileNav=false; scrollToId('reasons')" class="text-left">選ばれる理由</button>
-            <button @click.prevent="state.mobileNav=false; scrollToId('sales')" class="text-left">売上変化</button>
-            <button @click.prevent="state.mobileNav=false; scrollToId('records')" class="text-left">導入実績</button>
-            <button @click.prevent="state.mobileNav=false; scrollToId('faq')" class="text-left">FAQ</button>
-            <button @click.prevent="state.mobileNav=false; backHome()" class="text-left">← 戻る</button>
-          </div>
-        </template>
-
-        <template x-if="state.route === 'exclusive'">
-          <div class="flex flex-col gap-2">
-            <button @click.prevent="state.mobileNav=false; scrollToId('ex-intro')" class="text-left">商品紹介</button>
-            <button @click.prevent="state.mobileNav=false; scrollToId('ex-commit')" class="text-left">こだわり</button>
-            <button @click.prevent="state.mobileNav=false; scrollToId('ex-faq')" class="text-left">FAQ</button>
-            <button @click.prevent="state.mobileNav=false; backHome()" class="text-left">← 戻る</button>
-          </div>
-        </template>
+      <div class="px-4 py-3 space-y-2" x-show="state.route==='home'">
+        <button @click.prevent="state.mobileNav=false; scrollToId('equipments')" class="block">美容機器</button>
+        <button @click.prevent="state.mobileNav=false; scrollToId('exclusives')" class="block">専売品</button>
+        <button @click.prevent="state.mobileNav=false; openLine()" class="block">LINE</button>
+        <button @click.prevent="state.mobileNav=false; openContact()" class="block">問い合わせ</button>
+      </div>
+      <div class="px-4 py-3 space-y-2" x-show="state.route!=='home'">
+        <button @click.prevent="state.mobileNav=false; scrollToId('section-intro')" class="block">商品紹介</button>
+        <button @click.prevent="state.mobileNav=false; scrollToId('reasons')" class="block">選ばれる理由</button>
+        <button @click.prevent="state.mobileNav=false; scrollToId('sales')" class="block">売上変化</button>
+        <button @click.prevent="state.mobileNav=false; scrollToId('records')" class="block">導入実績</button>
+        <button @click.prevent="state.mobileNav=false; scrollToId('services')" class="block">その他サービス</button>
+        <button @click.prevent="state.mobileNav=false; scrollToId('faq')" class="block">FAQ</button>
+        <button @click.prevent="state.mobileNav=false; backHome()" class="block">← 戻る</button>
       </div>
     </div>
   </header>
 
-  <!-- HERO (Home) -->
+  <!-- HERO (HOME) -->
   <main class="pt-20">
-    <section id="hero" class="relative h-screen overflow-hidden" x-show="state.route==='home'">
+    <section id="hero" class="hero" x-show="state.route==='home'" x-transition.opacity>
       <template x-for="(src,i) in data.hero.images" :key="i">
-        <img :src="src" loading="lazy" alt="" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000" :class="{'opacity-100': state.heroIndex===i, 'opacity-0 pointer-events-none': state.heroIndex!==i}">
+        <img :src="src" class="bg" :class="{'active': state.heroIndex===i}" alt="hero">
       </template>
-
-      <div class="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/30"></div>
-
-      <div class="relative z-10 flex items-center justify-center h-full px-4">
-        <div class="text-center max-w-3xl text-white">
-          <img :src="data.brand.sampleLogoWord" alt="Verviii" class="mx-auto w-[520px] max-w-[86%] h-auto mb-6 drop-shadow-lg">
-          <h1 class="font-[Poppins] text-3xl md:text-5xl lg:text-6xl leading-tight font-extrabold">結果と収益を、最短で。</h1>
-          <p class="mt-3 text-lg text-white/90">直販×工場提携で“高性能を適正価格”に。導入から運用までワンストップで支援します。</p>
-          <div class="mt-6 flex flex-col sm:flex-row gap-3 items-center justify-center">
-            <button @click="scrollToId('equipments')" class="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-gradient-to-r from-[var(--accent-from)] to-[var(--accent-to)] text-white font-semibold shadow-lg">機器を見る</button>
-            <button @click="openContact()" class="inline-flex items-center gap-2 px-5 py-3 rounded-full border bg-white/10 text-white">お問い合わせ</button>
-          </div>
+      <div class="scrim"></div>
+      <div class="relative z-10 h-full grid place-items-center px-6 text-center text-white">
+        <div class="max-w-3xl">
+          <img :src="data.brand.sampleLogoWord" alt="Verviii" class="mx-auto w-[520px] max-w-[86%] h-auto mb-6 drop-shadow-xl reveal" :class="{'in':state.revealed}">
+          <h1 class="font-[Poppins] text-4xl md:text-6xl leading-tight reveal" :class="{'in':state.revealed}">結果と収益を、最短で。</h1>
+          <p class="mt-3 text-white/90 reveal" :class="{'in':state.revealed}">直販×工場提携で“高性能を適正価格”に。導入から運用までワンストップで支援します。</p>
         </div>
       </div>
-
-      <!-- thumbnails -->
       <div class="absolute right-4 bottom-6 flex gap-2 z-20">
         <template x-for="(img,i) in data.hero.images" :key="'h-dot'+i">
-          <button class="w-3 h-3 rounded-full bg-white/60" :class="{'bg-white': state.heroIndex===i}" @click="state.heroIndex=i" :aria-label="'ヒーロー画像 ' + (i+1)"></button>
+          <button class="w-3 h-3 rounded-full bg-white/60" :class="{'bg-white': state.heroIndex===i}" @click="state.heroIndex=i"></button>
         </template>
       </div>
     </section>
 
-    <!-- HOME content -->
-    <section class="container mx-auto max-w-6xl px-4 py-16" x-show="state.route==='home'">
+    <!-- HOME CONTENT -->
+    <section class="container py-16" x-show="state.route==='home'">
       <!-- Equipments -->
-      <div id="equipments" class="grid md:grid-cols-2 gap-8 items-center mb-16">
-        <div class="rounded-2xl overflow-hidden bg-[var(--card)] border" role="img" aria-label="機器イメージ">
+      <div id="equipments" class="grid md:grid-cols-2 gap-10 items-center mb-16">
+        <div class="relative rounded-2xl overflow-hidden bg-[var(--card)] border g-border shadow-soft reveal" :class="{'in':state.revealed}">
           <div class="relative aspect-[4/3]">
             <template x-for="(img,i) in data.equipments.carousel" :key="i">
-              <img :src="img" loading="lazy" alt="" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-700" :class="{'opacity-100': state.eqIndex===i, 'opacity-0 pointer-events-none': state.eqIndex!==i}">
+              <img :src="img" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-700" :style="{opacity: state.eqIndex===i?1:0}">
             </template>
-            <div class="absolute bottom-3 right-3 flex gap-2">
-              <template x-for="(img,i) in data.equipments.carousel" :key="'d'+i">
-                <button :class="{'ring-2 ring-white': state.eqIndex===i}" class="w-2.5 h-2.5 rounded-full bg-white/70" @click="state.eqIndex=i" :aria-label="'スライド ' + (i+1)"></button>
-              </template>
-            </div>
+          </div>
+          <div class="absolute bottom-3 right-3 flex gap-2">
+            <template x-for="(img,i) in data.equipments.carousel" :key="'d'+i">
+              <button :class="{'ring-2 ring-white': state.eqIndex===i}" class="w-2.5 h-2.5 rounded-full bg-white/70" @click="state.eqIndex=i"></button>
+            </template>
           </div>
         </div>
-
-        <div>
-          <h2 class="text-3xl md:text-4xl font-bold mb-3">ハイスペックかつローコストで、導入ハードルを下げる。</h2>
-          <p class="text-[var(--muted)] mb-6">業務用脱毛器をはじめとするプロ機器を、直販・一気通貫サポートで。</p>
-
-          <div class="space-y-4">
+        <div class="reveal" :class="{'in':state.revealed}">
+          <h2 class="text-3xl md:text-4xl font-bold mb-4">ハイスペックかつローコストで</h2>
+          <p class="text-[var(--muted)]">業務用脱毛器をはじめとするプロ機器を、直販・一気通貫サポートで。</p>
+          <div class="mt-6 grid gap-4">
             <template x-for="item in data.equipments.items" :key="item.slug">
-              <div class="flex items-center justify-between gap-4 p-4 rounded-xl border shadow-sm hover:shadow-md transition bg-white">
+              <div class="p-4 rounded-xl border bg-white shadow-sm hover:shadow-md transition flex items-center justify-between gap-4">
                 <div>
                   <div class="text-sm text-[var(--muted)]" x-text="item.name"></div>
                   <div class="text-xl font-bold" x-text="formatJPY(item.price)"></div>
                 </div>
-                <div class="flex items-center gap-3">
-                  <button class="px-4 py-2 rounded-full bg-gradient-to-r from-[var(--accent-from)] to-[var(--accent-to)] text-white font-semibold" @click="goDevice(item)">詳細を見る</button>
-                </div>
+                <button class="px-4 py-2 rounded-full bg-gradient-to-r from-[var(--accent-from)] to-[var(--accent-to)] text-white font-semibold" @click="goDevice(item)">詳細を見る</button>
               </div>
             </template>
           </div>
@@ -209,14 +192,13 @@
       </div>
 
       <!-- Exclusives -->
-      <div id="exclusives" class="grid md:grid-cols-2 gap-8 items-center">
-        <div class="order-2 md:order-1">
-          <h2 class="text-3xl md:text-4xl font-bold mb-3">肌浸透を追求した専売品で、満足度を最大化。</h2>
-          <p class="text-[var(--muted)] mb-6">施術との相性が良い成分設計。店販・リピートを見据えた価格設計。</p>
-
-          <div class="space-y-4">
+      <div id="exclusives" class="grid md:grid-cols-2 gap-10 items-center">
+        <div class="order-2 md:order-1 reveal" :class="{'in':state.revealed}">
+          <h2 class="text-3xl md:text-4xl font-bold mb-4">肌浸透を追求した専売品で</h2>
+          <p class="text-[var(--muted)]">施術との相性が良い成分設計。店販・リピートを見据えた価格設計。</p>
+          <div class="mt-6 grid gap-4">
             <template x-for="p in data.exclusives.items" :key="p.name">
-              <div class="flex items-center justify-between gap-4 p-4 rounded-xl border bg-white shadow-sm hover:shadow-md transition">
+              <div class="p-4 rounded-xl border bg-white shadow-sm hover:shadow-md transition flex items-center justify-between gap-4">
                 <div>
                   <div class="text-sm text-[var(--muted)]" x-text="p.name"></div>
                   <div class="text-base" x-text="p.features"></div>
@@ -226,191 +208,249 @@
             </template>
           </div>
         </div>
-
-        <div class="order-1 md:order-2 rounded-2xl overflow-hidden bg-[var(--card)] border">
+        <div class="order-1 md:order-2 relative rounded-2xl overflow-hidden bg-[var(--card)] border g-border shadow-soft reveal" :class="{'in':state.revealed}">
           <div class="relative aspect-[4/3]">
-            <template x-for="(img,i) in data.exclusives.carousel" :key="'p'+i">
-              <img :src="img" loading="lazy" alt="" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-700" :class="{'opacity-100': state.prIndex===i, 'opacity-0 pointer-events-none': state.prIndex!==i}">
+            <template x-for="(img,i) in data.exclusives.carousel" :key="i">
+              <img :src="img" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-700" :style="{opacity: state.prIndex===i?1:0}">
             </template>
-            <div class="absolute bottom-3 right-3 flex gap-2">
-              <template x-for="(img,i) in data.exclusives.carousel" :key="'p-dot'+i">
-                <button :class="{'ring-2 ring-white': state.prIndex===i}" class="w-2.5 h-2.5 rounded-full bg-white/70" @click="state.prIndex=i" :aria-label="'専売品スライド ' + (i+1)"></button>
-              </template>
-            </div>
+          </div>
+          <div class="absolute bottom-3 right-3 flex gap-2">
+            <template x-for="(img,i) in data.exclusives.carousel" :key="'p'+i">
+              <button :class="{'ring-2 ring-white': state.prIndex===i}" class="w-2.5 h-2.5 rounded-full bg-white/70" @click="state.prIndex=i"></button>
+            </template>
           </div>
         </div>
       </div>
     </section>
+  </main>
 
-    <!-- DEVICE page -->
-    <main x-show="state.route==='device'" class="bg-slate-50">
-      <section class="relative h-[56vh] md:h-[64vh] overflow-hidden">
-        <template x-for="(src,i) in data.device.hero.images" :key="'d-hero-'+i">
-          <img :src="src" loading="lazy" alt="" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000" :class="{'opacity-100': state.heroIndex2===i, 'opacity-0 pointer-events-none': state.heroIndex2!==i}">
-        </template>
-        <div class="absolute inset-0 bg-gradient-to-b from-black/30 to-black/25"></div>
-        <div class="relative z-10 flex items-center justify-center h-full px-4 text-white">
-          <div class="text-center max-w-3xl">
-            <img :src="data.device.brand.logo" alt="Photomedicell" class="mx-auto w-36 h-36 object-contain mb-4">
-            <h1 class="font-[Poppins] text-3xl md:text-4xl lg:text-5xl font-extrabold">Photomedicell</h1>
-            <p class="mt-2 text-lg text-white/90">低刺激・高速・高出力。結果と回転率を両立。</p>
-          </div>
-        </div>
-      </section>
-
-      <div class="sticky top-0 z-30 border-b bg-white/90 backdrop-blur">
-        <div class="container mx-auto max-w-6xl px-4 py-3 flex items-center justify-between">
-          <nav class="flex gap-4 text-sm">
-            <button @click.prevent="scrollToId('section-device-features')" class="hover:underline">機器紹介</button>
-            <button @click.prevent="scrollToId('reasons')" class="hover:underline">選ばれる理由</button>
-            <button @click.prevent="scrollToId('sales')" class="hover:underline">売上変化</button>
-            <button @click.prevent="scrollToId('records')" class="hover:underline">導入実績</button>
-            <button @click.prevent="scrollToId('faq')" class="hover:underline">FAQ</button>
-          </nav>
-          <button class="px-3 py-1 rounded-full border" @click="backHome()">← 戻る</button>
+  <!-- DEVICE page -->
+  <main x-show="state.route==='device'" class="bg-slate-50">
+    <section id="section-intro" class="relative h-[56vh] md:h-[64vh] overflow-hidden">
+      <template x-for="(src,i) in data.device.hero.images" :key="'d-hero-'+i">
+        <img :src="src" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000" :class="{'opacity-100': state.heroIndex2===i, 'opacity-0': state.heroIndex2!==i}">
+      </template>
+      <div class="absolute inset-0 bg-gradient-to-b from-black/35 to-black/25"></div>
+      <div class="relative z-10 flex items-center justify-center h-full px-4 text-white text-center">
+        <div class="max-w-3xl reveal" :class="{'in': state.revealDevice}">
+          <img :src="data.device.brand.logo" class="mx-auto w-36 h-36 object-contain mb-4" alt="Photomedicell">
+          <h1 class="display text-3xl md:text-5xl font-extrabold">Photomedicell</h1>
+          <p class="mt-2 text-white/90">低刺激・高速・高出力。結果と回転率を両立。</p>
         </div>
       </div>
+    </section>
 
-      <section id="section-device-features" class="container mx-auto max-w-6xl px-4 py-12">
-        <h2 class="text-3xl font-bold mb-6">機器紹介</h2>
-        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          <template x-for="card in data.device.products" :key="card.name">
-            <article class="p-4 rounded-2xl bg-white border shadow-sm hover:shadow-md transition">
-              <img :src="card.image" loading="lazy" alt="" class="w-full h-40 object-cover rounded-xl mb-3">
-              <h3 class="font-bold" x-text="card.name"></h3>
-              <div class="text-sm text-[var(--muted)]" x-text="card.tag"></div>
-              <div class="mt-2 text-xl font-bold" x-text="formatJPY(card.price)"></div>
-              <button class="mt-4 w-full px-3 py-2 rounded-full bg-gradient-to-r from-[var(--accent-from)] to-[var(--accent-to)] text-white">詳細</button>
-            </article>
-          </template>
-        </div>
-      </section>
+    <div class="sticky top-0 z-30 border-b bg-white/90 backdrop-blur">
+      <div class="container py-3 flex items-center justify-between">
+        <nav class="flex gap-4 text-sm">
+          <button @click.prevent="scrollToId('section-intro')" class="hover:underline">商品紹介</button>
+          <button @click.prevent="scrollToId('reasons')" class="hover:underline">選ばれる理由</button>
+          <button @click.prevent="scrollToId('sales')" class="hover:underline">売上変化</button>
+          <button @click.prevent="scrollToId('records')" class="hover:underline">導入実績</button>
+          <button @click.prevent="scrollToId('services')" class="hover:underline">その他サービス</button>
+          <button @click.prevent="scrollToId('faq')" class="hover:underline">FAQ</button>
+        </nav>
+        <button class="px-3 py-1 rounded-full border" @click="backHome()">← 戻る</button>
+      </div>
+    </div>
 
-      <section id="reasons" class="container mx-auto max-w-6xl px-4 py-12">
-        <div class="rounded-2xl overflow-hidden bg-white border shadow-sm">
-          <img :src="data.device.reasons.headerImage" loading="lazy" alt="" class="w-full h-44 object-cover">
-          <div class="p-6 md:p-8 grid md:grid-cols-3 gap-6">
-            <template x-for="r in data.device.reasons.items" :key="r.title">
-              <div class="p-5 rounded-xl border" style="border-color:var(--line)">
-                <h3 class="font-bold text-lg" x-text="r.title"></h3>
-                <p class="text-[var(--muted)] mt-2" x-text="r.body"></p>
-              </div>
-            </template>
-          </div>
-        </div>
-      </section>
-
-      <section id="sales" class="container mx-auto max-w-6xl px-4 py-12">
-        <h2 class="text-3xl font-bold mb-2">導入後の売上変化</h2>
-        <p class="text-[var(--muted)] mb-6">新メニュー追加と客単価上昇により売上増加（サンプル）。</p>
-        <div class="p-6 rounded-2xl bg-white border shadow-sm">
-          <svg class="w-full h-60" viewBox="0 0 600 240" preserveAspectRatio="none" x-ref="chart"></svg>
-          <div class="mt-3 text-xs text-[var(--muted)]">※サンプルデータ。実数値に差し替え可能</div>
-        </div>
-      </section>
-
-      <section id="records" class="container mx-auto max-w-6xl px-4 py-12">
-        <h2 class="text-3xl font-bold mb-4">導入実績</h2>
-        <div class="flow-wrap overflow-hidden rounded-2xl bg-white border p-4">
-          <div class="flex gap-4 animate-[marquee_20s_linear_infinite]">
-            <template x-for="c in [...data.device.records, ...data.device.records]" :key="c.company + Math.random()">
-              <article class="min-w-[260px] max-w-[320px] border rounded-xl p-4 bg-white">
-                <div class="flex items-center gap-3">
-                  <img :src="c.image" loading="lazy" class="w-12 h-12 rounded object-cover" alt="">
-                  <div>
-                    <div class="font-bold" x-text="c.company"></div>
-                    <div class="text-xs text-[var(--muted)]" x-text="c.role"></div>
-                  </div>
-                </div>
-                <p class="text-sm mt-3 text-[var(--ink)]/80" x-text="c.comment"></p>
-              </article>
-            </template>
-          </div>
-        </div>
-      </section>
-
-      <section id="faq" class="container mx-auto max-w-6xl px-4 py-12">
-        <h2 class="text-3xl font-bold mb-6 text-center">FAQ</h2>
-        <div class="divide-y rounded-2xl overflow-hidden bg-white border shadow-sm">
-          <template x-for="(f,i) in data.device.faq" :key="i">
-            <div class="p-5">
-              <button class="w-full flex items-center justify-between faq-q" @click="toggleFaq(i)" :aria-expanded="state.faqIndex===i">
-                <span class="font-bold" x-text="f.q"></span>
-                <span class="text-xl" x-text="state.faqIndex===i ? '−' : '+'"></span>
-              </button>
-              <div x-show="state.faqIndex===i" x-transition class="text-[var(--muted)] mt-2" x-text="f.a"></div>
-            </div>
-          </template>
-        </div>
-      </section>
-    </main>
-
-    <!-- EXCLUSIVE page -->
-    <main x-show="state.route==='exclusive'">
-      <section class="relative h-[56vh] md:h-[64vh] overflow-hidden">
-        <template x-for="(src,i) in data.exclusive.hero.images" :key="'e-hero-'+i">
-          <img :src="src" loading="lazy" alt="" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000" :class="{'opacity-100': state.heroIndex3===i, 'opacity-0 pointer-events-none': state.heroIndex3!==i}">
+    <section class="container py-12">
+      <h2 class="text-3xl font-bold mb-6">機器紹介</h2>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <template x-for="card in data.device.products" :key="card.name">
+          <article class="p-4 rounded-2xl bg-white border shadow-sm hover:shadow-md transition reveal">
+            <img :src="card.image" class="w-full h-40 object-cover rounded-xl mb-3" alt="">
+            <h3 class="font-bold" x-text="card.name"></h3>
+            <div class="text-sm text-[var(--muted)]" x-text="card.tag"></div>
+            <div class="mt-2 text-xl font-bold" x-text="formatJPY(card.price)"></div>
+            <button class="mt-4 w-full px-3 py-2 rounded-full bg-gradient-to-r from-[var(--accent-from)] to-[var(--accent-to)] text-white">詳細</button>
+          </article>
         </template>
-        <div class="absolute inset-0 bg-gradient-to-b from-black/30 to-black/25"></div>
-        <div class="relative z-10 flex items-center justify-center h-full px-4 text-white">
-          <div class="text-center max-w-3xl">
-            <img :src="data.exclusive.brand.logo" alt="Exclusive" class="mx-auto w-36 h-36 object-contain mb-4">
-            <h1 class="font-[Poppins] text-3xl md:text-4xl lg:text-5xl font-extrabold">Exclusive Line</h1>
-            <p class="mt-2 text-lg text-white/90">肌浸透を追求。施術と店販の両輪で成果を最大化。</p>
-          </div>
-        </div>
-      </section>
+      </div>
+    </section>
 
-      <section id="ex-intro" class="container mx-auto max-w-6xl px-4 py-12">
-        <h2 class="text-3xl font-bold mb-6">商品紹介</h2>
-        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <template x-for="p in data.exclusive.products" :key="p.name">
-            <article class="p-4 rounded-2xl bg-white border shadow-sm">
-              <img :src="p.image" loading="lazy" alt="" class="w-full h-40 object-cover rounded-xl mb-3">
-              <h3 class="font-bold" x-text="p.name"></h3>
-              <p class="text-sm text-[var(--muted)]" x-text="p.desc"></p>
-            </article>
-          </template>
-        </div>
-      </section>
-
-      <section id="ex-commit" class="container mx-auto max-w-6xl px-4 py-12">
-        <h2 class="text-3xl font-bold mb-4">こだわり</h2>
-        <div class="grid md:grid-cols-3 gap-6">
-          <template x-for="r in data.exclusive.reasons" :key="r.title">
-            <div class="p-5 rounded-2xl bg-white border shadow-sm">
-              <h3 class="font-bold" x-text="r.title"></h3>
+    <section id="reasons" class="container py-12">
+      <div class="rounded-2xl overflow-hidden bg-white border shadow-sm">
+        <img :src="data.device.reasons.headerImage" class="w-full h-44 object-cover" alt="">
+        <div class="p-6 md:p-8 grid md:grid-cols-3 gap-6">
+          <template x-for="r in data.device.reasons.items" :key="r.title">
+            <div class="p-5 rounded-xl border" style="border-color:var(--line)">
+              <h3 class="font-bold text-lg" x-text="r.title"></h3>
               <p class="text-[var(--muted)] mt-2" x-text="r.body"></p>
             </div>
           </template>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <section id="ex-faq" class="container mx-auto max-w-6xl px-4 py-12">
-        <h2 class="text-3xl font-bold mb-6 text-center">FAQ</h2>
-        <div class="divide-y rounded-2xl overflow-hidden bg-white border shadow-sm">
-          <template x-for="(f,i) in data.exclusive.faq" :key="i">
-            <div class="p-5">
-              <button class="w-full flex items-center justify-between faq-q" @click="toggleFaq(i)" :aria-expanded="state.faqIndex===i">
-                <span class="font-bold" x-text="f.q"></span>
-                <span class="text-xl" x-text="state.faqIndex===i ? '−' : '+'"></span>
-              </button>
-              <div x-show="state.faqIndex===i" x-transition class="text-[var(--muted)] mt-2" x-text="f.a"></div>
+    <section id="sales" class="container py-12">
+      <h2 class="text-3xl font-bold mb-2">導入後の売上変化</h2>
+      <p class="text-[var(--muted)] mb-6">新メニュー追加と客単価上昇により売上増加（サンプル）。</p>
+      <div class="p-6 rounded-2xl bg-white border shadow-sm">
+        <svg class="w-full h-60" viewBox="0 0 600 240" preserveAspectRatio="none" x-ref="chart"></svg>
+        <div class="mt-3 text-xs text-[var(--muted)]">※サンプルデータ。実数値に差し替え可能</div>
+      </div>
+    </section>
+
+    <section id="records" class="container py-12">
+      <h2 class="text-3xl font-bold mb-4">導入実績</h2>
+      <div class="overflow-hidden rounded-2xl bg-white border p-4">
+        <div class="marquee">
+          <template x-for="c in [...data.device.records, ...data.device.records]" :key="c.company + Math.random()">
+            <article class="min-w-[260px] max-w-[320px] border rounded-xl p-4 bg-white">
+              <div class="flex items-center gap-3">
+                <img :src="c.image" class="w-12 h-12 rounded object-cover" alt="">
+                <div><div class="font-bold" x-text="c.company"></div><div class="text-xs text-[var(--muted)]" x-text="c.role"></div></div>
+              </div>
+              <p class="text-sm mt-3 text-[var(--ink)]/80" x-text="c.comment"></p>
+            </article>
+          </template>
+        </div>
+      </div>
+    </section>
+
+    <!-- その他サービス -->
+    <section id="services" class="container py-12">
+      <h2 class="text-3xl font-bold mb-6">その他サービス</h2>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <template x-for="s in data.commonServices" :key="s.title">
+          <div class="p-5 rounded-2xl bg-white border shadow-sm hover:shadow-md transition g-border">
+            <div class="text-2xl">💡</div>
+            <h3 class="font-bold mt-2" x-text="s.title"></h3>
+            <p class="text-[var(--muted)] mt-1" x-text="s.desc"></p>
+          </div>
+        </template>
+      </div>
+    </section>
+
+    <section id="faq" class="container py-16">
+      <h2 class="text-3xl font-bold mb-6 text-center">FAQ</h2>
+      <div class="divide-y rounded-2xl overflow-hidden bg-white border shadow-sm">
+        <template x-for="(f,i) in data.device.faq" :key="i">
+          <div class="p-5">
+            <button class="w-full flex items-center justify-between" @click="toggleFaq(i)"><span class="font-bold" x-text="f.q"></span><span class="text-xl" x-text="state.faqIndex===i ? '−' : '+'"></span></button>
+            <div x-show="state.faqIndex===i" x-transition class="text-[var(--muted)] mt-2" x-text="f.a"></div>
+          </div>
+        </template>
+      </div>
+    </section>
+  </main>
+
+  <!-- EXCLUSIVE page -->
+  <main x-show="state.route==='exclusive'" class="bg-slate-50">
+    <section id="section-intro" class="relative h-[56vh] md:h-[64vh] overflow-hidden">
+      <template x-for="(src,i) in data.exclusive.hero.images" :key="'e-hero-'+i">
+        <img :src="src" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000" :class="{'opacity-100': state.heroIndex3===i, 'opacity-0': state.heroIndex3!==i}">
+      </template>
+      <div class="absolute inset-0 bg-gradient-to-b from-black/35 to-black/25"></div>
+      <div class="relative z-10 flex items-center justify-center h-full px-4 text-white text-center">
+        <div class="max-w-3xl reveal" :class="{'in': state.revealExclusive}">
+          <img :src="data.exclusive.brand.logo" class="mx-auto w-36 h-36 object-contain mb-4" alt="Exclusive">
+          <h1 class="display text-3xl md:text-5xl font-extrabold">Exclusive Line</h1>
+          <p class="mt-2 text-white/90">肌浸透を追求。施術と店販の両輪で成果を最大化。</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="sticky top-0 z-30 border-b bg-white/90 backdrop-blur">
+      <div class="container py-3 flex items-center justify-between">
+        <nav class="flex gap-4 text-sm">
+          <button @click.prevent="scrollToId('section-intro')" class="hover:underline">商品紹介</button>
+          <button @click.prevent="scrollToId('reasons')" class="hover:underline">選ばれる理由</button>
+          <button @click.prevent="scrollToId('sales')" class="hover:underline">売上変化</button>
+          <button @click.prevent="scrollToId('records')" class="hover:underline">導入実績</button>
+          <button @click.prevent="scrollToId('services')" class="hover:underline">その他サービス</button>
+          <button @click.prevent="scrollToId('faq')" class="hover:underline">FAQ</button>
+        </nav>
+        <button class="px-3 py-1 rounded-full border" @click="backHome()">← 戻る</button>
+      </div>
+    </div>
+
+    <section class="container py-12">
+      <h2 class="text-3xl font-bold mb-6">商品紹介</h2>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <template x-for="p in data.exclusive.products" :key="p.name">
+          <article class="p-4 rounded-2xl bg-white border shadow-sm hover:shadow-md transition reveal">
+            <img :src="p.image" class="w-full h-40 object-cover rounded-xl mb-3" alt="">
+            <h3 class="font-bold" x-text="p.name"></h3>
+            <p class="text-sm text-[var(--muted)]" x-text="p.desc"></p>
+          </article>
+        </template>
+      </div>
+    </section>
+
+    <section id="reasons" class="container py-12">
+      <div class="rounded-2xl overflow-hidden bg-white border shadow-sm">
+        <img :src="data.device.reasons.headerImage" class="w-full h-44 object-cover" alt="">
+        <div class="p-6 md:p-8 grid md:grid-cols-3 gap-6">
+          <template x-for="r in data.exclusive.reasons" :key="r.title">
+            <div class="p-5 rounded-xl border" style="border-color:var(--line)">
+              <h3 class="font-bold text-lg" x-text="r.title"></h3>
+              <p class="text-[var(--muted)] mt-2" x-text="r.body"></p>
             </div>
           </template>
         </div>
+      </div>
+    </section>
 
-        <div class="text-center py-8">
-          <button class="px-4 py-2 rounded-full border" @click="backHome()">← 戻る</button>
+    <section id="sales" class="container py-12">
+      <h2 class="text-3xl font-bold mb-2">導入後の売上変化</h2>
+      <p class="text-[var(--muted)] mb-6">店販導入で客単価・LTV が上がった想定（サンプル）。</p>
+      <div class="p-6 rounded-2xl bg-white border shadow-sm">
+        <svg class="w-full h-60" viewBox="0 0 600 240" preserveAspectRatio="none" x-ref="chart2"></svg>
+        <div class="mt-3 text-xs text-[var(--muted)]">※サンプルデータ。実数値に差し替え可能</div>
+      </div>
+    </section>
+
+    <section id="records" class="container py-12">
+      <h2 class="text-3xl font-bold mb-4">導入実績</h2>
+      <div class="overflow-hidden rounded-2xl bg-white border p-4">
+        <div class="marquee">
+          <template x-for="c in [...data.device.records, ...data.device.records]" :key="'ex-'+Math.random()">
+            <article class="min-w-[260px] max-w-[320px] border rounded-xl p-4 bg-white">
+              <div class="flex items-center gap-3">
+                <img :src="c.image" class="w-12 h-12 rounded object-cover" alt="">
+                <div><div class="font-bold" x-text="c.company"></div><div class="text-xs text-[var(--muted)]" x-text="c.role"></div></div>
+              </div>
+              <p class="text-sm mt-3 text-[var(--ink)]/80" x-text="c.comment"></p>
+            </article>
+          </template>
         </div>
-      </section>
-    </main>
+      </div>
+    </section>
+
+    <!-- その他サービス -->
+    <section id="services" class="container py-12">
+      <h2 class="text-3xl font-bold mb-6">その他サービス</h2>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <template x-for="s in data.commonServices" :key="'ex-'+s.title">
+          <div class="p-5 rounded-2xl bg-white border shadow-sm hover:shadow-md transition g-border">
+            <div class="text-2xl">💡</div>
+            <h3 class="font-bold mt-2" x-text="s.title"></h3>
+            <p class="text-[var(--muted)] mt-1" x-text="s.desc"></p>
+          </div>
+        </template>
+      </div>
+    </section>
+
+    <section id="faq" class="container py-16">
+      <h2 class="text-3xl font-bold mb-6 text-center">FAQ</h2>
+      <div class="divide-y rounded-2xl overflow-hidden bg-white border shadow-sm">
+        <template x-for="(f,i) in data.exclusive.faq" :key="i">
+          <div class="p-5">
+            <button class="w-full flex items-center justify-between" @click="toggleFaq(i)"><span class="font-bold" x-text="f.q"></span><span class="text-xl" x-text="state.faqIndex===i ? '−' : '+'"></span></button>
+            <div x-show="state.faqIndex===i" x-transition class="text-[var(--muted)] mt-2" x-text="f.a"></div>
+          </div>
+        </template>
+      </div>
+      <div class="text-center py-8"><button class="px-4 py-2 rounded-full border" @click="backHome()">← 戻る</button></div>
+    </section>
   </main>
 
-  <!-- Contact Modal -->
-  <div x-cloak x-show="state.showModal" x-transition.opacity class="fixed inset-0 z-50 grid place-items-center p-4" aria-hidden="false" role="dialog" aria-modal="true">
-    <div class="absolute inset-0 bg-black/40" @click="closeModal()" aria-hidden="true"></div>
-    <div @keydown.escape.window="closeModal()" class="relative w-full max-w-xl rounded-2xl glass shadow-soft border p-6 bg-white" x-ref="modal">
+  <!-- 問い合わせモーダル -->
+  <div x-cloak x-show="state.showModal" x-transition.opacity class="fixed inset-0 z-50 grid place-items-center p-4" role="dialog" aria-modal="true">
+    <div class="absolute inset-0 bg-black/40" @click="closeModal()"></div>
+    <div class="relative w-full max-w-xl rounded-2xl glass shadow-soft border p-6 bg-white" x-ref="modal">
       <h3 class="text-xl font-bold mb-4">お問い合わせ / お見積り</h3>
       <form @submit.prevent="submitContact">
         <div class="grid md:grid-cols-2 gap-4">
@@ -420,16 +460,13 @@
           <label class="grid gap-1 text-sm">電話番号 <input type="tel" x-model="form.tel" class="px-3 py-2 rounded border" /></label>
           <label class="grid gap-1 text-sm">導入予定時期
             <select x-model="form.when" class="px-3 py-2 rounded border">
-              <option>1ヶ月以内</option>
-              <option>3ヶ月以内</option>
-              <option>未定</option>
+              <option>1ヶ月以内</option><option>3ヶ月以内</option><option>未定</option>
             </select>
           </label>
           <label class="grid gap-1 text-sm md:col-span-2">ご相談内容
             <textarea x-model="form.body" rows="4" class="px-3 py-2 rounded border" placeholder="例）Photomedicellについて詳しく知りたい…"></textarea>
           </label>
         </div>
-
         <div class="mt-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <button type="submit" class="px-4 py-2 rounded-full bg-gradient-to-r from-[var(--accent-from)] to-[var(--accent-to)] text-white font-semibold">送信</button>
           <a :href="'tel:'+data.links.tel" class="px-4 py-2 rounded-full border text-sm">電話で問い合わせる（発信）</a>
@@ -440,24 +477,17 @@
   </div>
 
   <footer class="mt-16 border-t" style="border-color:var(--line)">
-    <div class="container mx-auto max-w-6xl px-4 text-center text-xs text-[var(--muted)] py-8">
-      © <span x-text="new Date().getFullYear()"></span> Verviii.
-    </div>
+    <div class="container text-center text-xs text-[var(--muted)] py-8">© <span x-text="new Date().getFullYear()"></span> Verviii.</div>
   </footer>
 
-  <!-- JSON data -->
+  <!-- DATA -->
   <script id="data" type="application/json">
   {
     "meta": {"title":"Verviii | プロ機器＆専売品","description":"次世代の結果と収益化を両立する、サロン向けプロ機器＆専売品。直販・工場提携で高品質を適正価格で。"},
     "links": {"line":"https://line.me/R/ti/p/@verviii_official","tel":"0120000000"},
     "brand": {
       "sampleLogoSquare":"https://images.unsplash.com/photo-1520975916090-3105956dac38?q=80&w=256&auto=format&fit=crop",
-      "sampleLogoWord":"data:image/svg+xml;utf8,\
-        <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 240'>\
-          <defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='0'><stop offset='0%' stop-color='%237c3aed'/><stop offset='100%' stop-color='%2306b6d4'/></linearGradient></defs>\
-          <rect width='1200' height='240' fill='none'/>\
-          <text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-family='Poppins, sans-serif' font-size='160' font-weight='900' fill='url(%23g)'>Verviii</text>\
-        </svg>"
+      "sampleLogoWord":"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 240'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='0'><stop offset='0%' stop-color='%237c3aed'/><stop offset='100%' stop-color='%2306b6d4'/></linearGradient></defs><rect width='1200' height='240' fill='none'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-family='Poppins, sans-serif' font-size='160' font-weight='900' fill='url(%23g)'>Verviii</text></svg>"
     },
     "hero": {"images":[
       "https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=1920&auto=format&fit=crop",
@@ -541,143 +571,164 @@
         {"q":"小ロット対応は可能？","a":"可能です。SKUと数量により条件をご案内します。"},
         {"q":"成分表は開示できる？","a":"主要成分・配合目的を資料でご提示可能です。"}
       ]
-    }
+    },
+    "commonServices":[
+      {"title":"導入研修","desc":"照射手順・カウンセリング・安全運用を現場でレクチャー。"},
+      {"title":"メニュー設計","desc":"客単価と回転率の両立を意識した価格・回数設計。"},
+      {"title":"集客導線","desc":"LP/LINE/広告の導線づくりと計測設計。"},
+      {"title":"店販強化","desc":"専売品の在庫・レイアウト・クロスセル提案。"}
+    ]
   }
   </script>
 
-  <!-- App Script -->
+  <!-- APP -->
   <script>
     function app(){
       return {
         state:{
           route:'home',
           showIntroHome:true, showIntroDevice:false, showIntroEx:false,
-          showModal:false,
-          heroIndex:0, heroIndex2:0, heroIndex3:0,
-          eqIndex:0, prIndex:0,
-          faqIndex:-1,
-          mobileNav:false
+          showModal:false, heroIndex:0, heroIndex2:0, heroIndex3:0,
+          eqIndex:0, prIndex:0, faqIndex:-1, mobileNav:false,
+          revealed:false, revealDevice:false, revealExclusive:false
         },
         form:{name:'', company:'', email:'', tel:'', when:'未定', body:''},
-        data: JSON.parse(document.getElementById('data').textContent),
-        intervals: [],
+        data: {},
+
         init(){
-          // intros
-          setTimeout(()=>{ this.state.showIntroHome=false }, 1400);
-
-          // cycles (store interval ids for cleanup if needed)
-          this.intervals.push(this.cycle(()=>this.state.heroIndex, v=>this.state.heroIndex=v, this.data.hero.images.length, 4200));
-          this.intervals.push(this.cycle(()=>this.state.heroIndex2, v=>this.state.heroIndex2=v, this.data.device.hero.images.length, 4200));
-          this.intervals.push(this.cycle(()=>this.state.heroIndex3, v=>this.state.heroIndex3=v, this.data.exclusive.hero.images.length, 4200));
-          this.intervals.push(this.cycle(()=>this.state.eqIndex, v=>this.state.eqIndex=v, this.data.equipments.carousel.length, 3000));
-          this.intervals.push(this.cycle(()=>this.state.prIndex, v=>this.state.prIndex=v, this.data.exclusives.carousel.length, 3000));
-
-          // draw chart after next tick
-          this.$nextTick(()=>this.drawChart());
-
-          // handle resize for chart
-          window.addEventListener('resize', ()=>this.drawChart());
-        },
-        cycle(get,set,len,ms){
-          if(!len || len<=1) return null;
-          const id = setInterval(()=> set((get()+1)%len), ms);
-          return id;
-        },
-        formatJPY(n){ return new Intl.NumberFormat('ja-JP',{style:'currency',currency:'JPY',maximumFractionDigits:0}).format(n) },
-        scrollToId(id){
-          const el=document.getElementById(id);
-          if(!el) return;
-          const top=el.getBoundingClientRect().top + window.pageYOffset - 80;
-          window.scrollTo({top, behavior:'smooth'});
-          this.state.mobileNav = false;
-        },
-        openLine(){ window.open(this.data.links.line, '_blank', 'noopener'); },
-        openContact(){ this.state.showModal=true; this.$nextTick(()=> this.focusFirstInModal()) },
-        closeModal(){ this.state.showModal=false; this.state.mobileNav=false },
-        focusFirstInModal(){
-          const modal = this.$refs.modal;
-          if(!modal) return;
-          const first = modal.querySelector('input,textarea,select,button');
-          first && first.focus();
-        },
-        submitContact(){
-          // TODO: connect to API endpoint. For now simple stub.
-          if(!this.form.email || !this.form.name){
-            alert('お名前とメールは必須です。');
-            return;
+          // JSONを安全に読み込む
+          try{
+            const raw = document.getElementById('data')?.textContent || '{}';
+            this.data = JSON.parse(raw);
+          }catch(e){
+            console.error('JSON parse failed. Using fallback.', e);
+            this.data = { meta:{title:'Verviii'}, links:{line:'#',tel:'0000'}, brand:{sampleLogoWord:''}, hero:{images:[]} };
           }
-          alert('送信しました。担当よりご連絡いたします。');
-          this.state.showModal=false;
-          // reset form lightly
-          this.form = {name:'', company:'', email:'', tel:'', when:'未定', body:''};
+          // x-cloak保険
+          this.$nextTick(()=>{ document.querySelectorAll('[x-cloak]').forEach(el=>el.removeAttribute('x-cloak')); });
+
+          // イントロ → HERO
+          setTimeout(()=>{
+            this.state.showIntroHome = false;
+            this.state.revealed = true;
+          }, 2800);
+
+          // スライドの自動切替
+          this.cycle(()=>this.state.heroIndex, v=>this.state.heroIndex=v, this.data.hero.images.length, 4200);
+          this.cycle(()=>this.state.heroIndex2, v=>this.state.heroIndex2=v, this.data.device.hero.images.length, 4200);
+          this.cycle(()=>this.state.heroIndex3, v=>this.state.heroIndex3=v, this.data.exclusive.hero.images.length, 4200);
+          this.cycle(()=>this.state.eqIndex, v=>this.state.eqIndex=v, this.data.equipments.carousel.length, 3000);
+          this.cycle(()=>this.state.prIndex, v=>this.state.prIndex=v, this.data.exclusives.carousel.length, 3000);
+
+          // チャート描画
+          this.$nextTick(()=>{ this.drawChart(); this.drawChart2(); });
+          window.addEventListener('resize', ()=>{ this.drawChart(); this.drawChart2(); });
+
+          // スクロールでreveal
+          const onScroll=()=>{
+            const y=window.scrollY;
+            if(y>60) this.state.revealed=true;
+            document.querySelectorAll('.reveal').forEach(el=>{
+              const r=el.getBoundingClientRect();
+              if(r.top<window.innerHeight*0.9) el.classList.add('in');
+            });
+          };
+          onScroll();
+          window.addEventListener('scroll', onScroll, {passive:true});
         },
+
+        cycle(get,set,len,ms){ if(!len||len<=1) return; return setInterval(()=> set((get()+1)%len), ms) },
+        formatJPY(n){ return new Intl.NumberFormat('ja-JP',{style:'currency',currency:'JPY',maximumFractionDigits:0}).format(n) },
+        scrollToId(id){ const el=document.getElementById(id); if(!el) return; const top=el.getBoundingClientRect().top + window.pageYOffset - 80; window.scrollTo({top, behavior:'smooth'}); this.state.mobileNav=false },
+        openLine(){ window.open(this.data.links.line, '_blank', 'noopener') },
+        openContact(){ this.state.showModal=true; this.$nextTick(()=>{ const first=this.$refs.modal?.querySelector('input,textarea,select,button'); first&&first.focus(); }) },
+        closeModal(){ this.state.showModal=false; this.state.mobileNav=false },
+        submitContact(){ if(!this.form.email||!this.form.name){ alert('お名前とメールは必須です。'); return } alert('送信しました。担当よりご連絡いたします。'); this.state.showModal=false; this.form={name:'',company:'',email:'',tel:'',when:'未定',body:''} },
+
         backHome(){
-          this.state.route='home';
-          window.scrollTo({top:0, behavior:'smooth'});
-          this.state.showIntroHome=true;
-          setTimeout(()=>{ this.state.showIntroHome=false }, 900);
+          this.state.route = 'home';
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          this.state.revealed = false;
+          this.state.showIntroHome = true;
+          setTimeout(() => {
+            this.state.showIntroHome = false;
+            this.state.revealed = true;
+          }, 2800);
         },
+
         goDevice(item){
-          if(item.slug==='photomedicell'){
-            this.state.route='device';
-            this.state.showIntroDevice=true;
-            setTimeout(()=>{ this.state.showIntroDevice=false }, 900);
-            window.scrollTo({top:0, behavior:'smooth'});
+          if (item.slug === 'photomedicell') {
+            this.state.route = 'device';
+            this.state.revealDevice = false;
+            this.state.showIntroDevice = true;
+            setTimeout(() => {
+              this.state.showIntroDevice = false;
+              this.state.revealDevice = true;
+            }, 900);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
           } else {
             alert('詳細ページ準備中です。');
           }
         },
+
         goExclusive(p){
-          this.state.route='exclusive';
-          this.state.showIntroEx=true;
-          setTimeout(()=>{ this.state.showIntroEx=false }, 900);
-          window.scrollTo({top:0, behavior:'smooth'});
+          this.state.route = 'exclusive';
+          this.state.revealExclusive = false;
+          this.state.showIntroEx = true;
+          setTimeout(() => {
+            this.state.showIntroEx = false;
+            this.state.revealExclusive = true;
+          }, 900);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
         },
+
         toggleFaq(i){ this.state.faqIndex = (this.state.faqIndex===i ? -1 : i) },
 
-        // responsive chart draw
         drawChart(){
-          const svg = this.$refs.chart;
-          if(!svg) return;
-          const container = svg.parentElement;
-          const W = Math.max(320, container.clientWidth);
-          const H = 240;
-          const P = 40;
-          const labels = this.data.device.sales.labels;
-          const values = this.data.device.sales.revenue;
-          const max = Math.max(...values) * 1.2;
-          svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
-          svg.innerHTML = '';
-          const mk = (t,a) => { const el = document.createElementNS('http://www.w3.org/2000/svg', t); for(const k in a) el.setAttribute(k,a[k]); return el };
-          svg.appendChild(mk('rect',{x:0,y:0,width:W,height:H,fill:'transparent'}));
+          const svg=this.$refs.chart; if(!svg) return;
+          const W=Math.max(320, svg.parentElement.clientWidth), H=240, P=40;
+          const L=this.data.device.sales.labels, V=this.data.device.sales.revenue, M=Math.max(...V)*1.2;
+          svg.setAttribute('viewBox',`0 0 ${W} ${H}`); svg.innerHTML='';
+          const mk=(t,a)=>{const e=document.createElementNS('http://www.w3.org/2000/svg',t); for(const k in a) e.setAttribute(k,a[k]); return e};
           svg.appendChild(mk('line',{x1:P,y1:P,x2:P,y2:H-P,stroke:'#e6eef8'}));
           svg.appendChild(mk('line',{x1:P,y1:H-P,x2:W-P,y2:H-P,stroke:'#e6eef8'}));
-          const bw = (W-2*P)/values.length*0.6;
-          const defs = mk('defs',{});
-          const g = mk('linearGradient',{id:'g',x1:'0',y1:'0',x2:'0',y2:'1'});
+          const bw=(W-2*P)/V.length*.6;
+          const defs=mk('defs',{}), g=mk('linearGradient',{id:'g',x1:'0',y1:'0',x2:'0',y2:'1'});
           g.appendChild(mk('stop',{offset:'0%','stop-color':'#7c3aed'}));
           g.appendChild(mk('stop',{offset:'100%','stop-color':'#06b6d4'}));
-          defs.appendChild(g);
-          svg.appendChild(defs);
-          values.forEach((v,i)=>{
-            const blockW = (W-2*P)/values.length;
-            const x = P + blockW*i + (blockW - bw)/2;
-            const h = (H-2*P) * (v/max);
-            const y = H-P-h;
-            svg.appendChild(mk('rect',{x:x,y:y,width:bw,height:h,rx:6,fill:'url(#g)'}));
-            const txt = mk('text',{x:x + bw/2, y:H - P + 14, 'text-anchor':'middle', fill:'#64748b', 'font-size': Math.max(10, W < 420 ? 8 : 10)});
-            txt.textContent = labels[i] || '';
-            svg.appendChild(txt);
+          defs.appendChild(g); svg.appendChild(defs);
+          V.forEach((v,i)=>{
+            const block=(W-2*P)/V.length; const x=P+block*i+(block-bw)/2;
+            const h=(H-2*P)*(v/M); const y=H-P-h;
+            svg.appendChild(mk('rect',{x,y,width:bw,height:h,rx:6,fill:'url(#g)'}));
+            const t=mk('text',{x:x+bw/2,y:H-P+14,'text-anchor':'middle',fill:'#64748b','font-size':Math.max(10, W<420?8:10)});
+            t.textContent=L[i]; svg.appendChild(t);
+          });
+        },
+
+        drawChart2(){
+          const svg=this.$refs.chart2; if(!svg) return;
+          const W=Math.max(320, svg.parentElement.clientWidth), H=240, P=40;
+          const L=['1Q','2Q','3Q','4Q'], V=[90,120,150,210]; const M=Math.max(...V)*1.2;
+          svg.setAttribute('viewBox',`0 0 ${W} ${H}`); svg.innerHTML='';
+          const mk=(t,a)=>{const e=document.createElementNS('http://www.w3.org/2000/svg',t); for(const k in a) e.setAttribute(k,a[k]); return e};
+          svg.appendChild(mk('line',{x1:P,y1:P,x2:P,y2:H-P,stroke:'#e6eef8'}));
+          svg.appendChild(mk('line',{x1:P,y1:H-P,x2:W-P,y2:H-P,stroke:'#e6eef8'}));
+          const bw=(W-2*P)/V.length*.6;
+          const defs=mk('defs',{}), g=mk('linearGradient',{id:'g2',x1:'0',y1:'0',x2:'0',y2:'1'});
+          g.appendChild(mk('stop',{offset:'0%','stop-color':'#06b6d4'}));
+          g.appendChild(mk('stop',{offset:'100%','stop-color':'#7c3aed'}));
+          defs.appendChild(g); svg.appendChild(defs);
+          V.forEach((v,i)=>{
+            const block=(W-2*P)/V.length; const x=P+block*i+(block-bw)/2;
+            const h=(H-2*P)*(v/M); const y=H-P-h;
+            svg.appendChild(mk('rect',{x,y,width:bw,height:h,rx:6,fill:'url(#g2)'}));
+            const t=mk('text',{x:x+bw/2,y:H-P+14,'text-anchor':'middle',fill:'#64748b','font-size':Math.max(10, W<420?8:10)});
+            t.textContent=L[i]; svg.appendChild(t);
           });
         }
       }
     }
   </script>
-
-  <style>
-    /* small marquee animation for records */
-    @keyframes marquee{ 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
-    .animate-\[marquee_20s_linear_infinite\]{ animation: marquee 20s linear infinite; }
-  </style>
 </body>
 </html>
