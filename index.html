@@ -8,42 +8,200 @@
   <meta name="theme-color" content="#ffffff" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;900&family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
+  <!-- 明朝を追加 -->
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Poppins:wght@700;900&family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
   <style>
+      /* HERO ロゴ光エフェクト（青グラデ） */
+.hero-logo-wrap {
+  position: relative;
+  display: inline-block;
+}
+
+.hero-logo-wrap::before {
+  content: "";
+  position: absolute;
+  inset: -20px;
+  z-index: -1;
+  border-radius: 50%;
+  filter: blur(48px);
+  opacity: 0.55;
+  background: radial-gradient(
+    circle,
+    rgba(96, 165, 250, 0.45) 0%,    /* 明るい青 */
+    rgba(59, 130, 246, 0.30) 35%,   /* 中間色 */
+    rgba(37, 99, 235, 0.18) 55%,    /* 少し深い青 */
+    rgba(0, 0, 0, 0) 80%            /* 外側は透明 */
+  );
+  animation: auraPulse 5s ease-in-out infinite alternate;
+}
+
+/* ふわっと鼓動する光 */
+@keyframes auraPulse {
+  0%   { transform: scale(0.92); opacity: 0.45; }
+  100% { transform: scale(1.06); opacity: 0.70; }
+}
+
+      /* HERO ロゴ：下からふわっと浮くフェードアップ */
+.hero-logo {
+  opacity: 0;
+  transform: translateY(22px) scale(0.96);
+  animation: heroLogoIn 1.3s ease-out forwards;
+  animation-delay: 0.35s; /* reveal と被らないよう少し遅らせる */
+}
+
+@keyframes heroLogoIn {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+       html{
+      background:#000;   /* ロード中の下地だけ黒 */
+    }
+
     :root{
       --bg:#ffffff; --card:#ffffff; --ink:#0f172a; --muted:#64748b; --line:#e6eef8;
-      --accent-from:#7c3aed; --accent-to:#06b6d4; --ring:#c7d2fe;
+      --accent-from:#7c3aed; --accent-to:#06b6d4; --line-green:#06c755;
     }
     [x-cloak]{display:none!important}
     body{background:var(--bg); color:var(--ink); font-family:'Noto Sans JP', system-ui, -apple-system, Segoe UI, Roboto,'Helvetica Neue', Arial}
     .container{max-width:1120px; margin:0 auto; padding:0 1rem}
     .shadow-soft{box-shadow:0 12px 36px rgba(2,6,23,.08)}
     .glass{backdrop-filter: blur(12px); background: rgba(255,255,255,.65)}
+    .pr-safe{padding-right:max(16px, env(safe-area-inset-right))}
 
     /* ===== INTRO (HOME) ===== */
-    .intro{position:fixed; inset:0; z-index:100; display:grid; place-items:center; overflow:hidden; background:
-      radial-gradient(1200px 700px at 20% -10%, rgba(124,58,237,.12), transparent 55%),
-      radial-gradient(900px 600px at 80% 110%, rgba(6,182,212,.12), transparent 55%),
-      #fff}
-    .intro__grain::before{content:''; position:absolute; inset:0; pointer-events:none; opacity:.16; mix-blend:multiply; background:url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'160\' height=\'160\'><filter id=\'n\'><feTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'3\' stitchTiles=\'stitch\'/></filter><rect width=\'160\' height=\'160\' filter=\'url(%23n)\' opacity=\'0.4\'/></svg>') repeat}
-    .intro__ring{position:absolute; inset:-10%; border-radius:40px; background:conic-gradient(from 180deg, rgba(124,58,237,.25), rgba(6,182,212,.25), rgba(124,58,237,.25)); -webkit-mask:radial-gradient(circle at 50% 50%, transparent 45%, black 46%); mask:radial-gradient(circle at 50% 50%, transparent 45%, black 46%); filter:blur(20px); animation:ring 5.2s ease-in-out infinite alternate}
-    @keyframes ring{to{transform:rotate(20deg) scale(1.05); filter:blur(24px)}}
-    .intro__word{font-family:'Poppins',sans-serif; font-weight:900; font-size:clamp(40px,10vw,120px); letter-spacing:.02em; position:relative; display:inline-block; line-height:1}
-    .intro__word--gradient{background:linear-gradient(90deg,var(--accent-from),var(--accent-to)); -webkit-background-clip:text; background-clip:text; color:transparent; filter:drop-shadow(0 8px 28px rgba(124,58,237,.25))}
-    .intro__shine{position:absolute; inset:0; background:linear-gradient(120deg, transparent 0%, rgba(255,255,255,.8) 45%, transparent 60%); transform:skewX(-20deg) translateX(-120%); animation:shine 3s .9s ease forwards}
-    @keyframes shine{to{transform:skewX(-20deg) translateX(120%)}}
-    .intro__letters span{display:inline-block; opacity:0; transform:translateY(18px) scale(.98); animation:letter .7s ease forwards}
-    .intro__letters span:nth-child(1){animation-delay:.05s} .intro__letters span:nth-child(2){animation-delay:.12s} .intro__letters span:nth-child(3){animation-delay:.19s} .intro__letters span:nth-child(4){animation-delay:.26s} .intro__letters span:nth-child(5){animation-delay:.33s} .intro__letters span:nth-child(6){animation-delay:.40s} .intro__letters span:nth-child(7){animation-delay:.47s}
-    @keyframes letter{to{opacity:1; transform:none}}
+   /* ===== INTRO (HOME) – black + logo fade ===== */
+.intro{
+  position:fixed;
+  inset:0;
+  z-index:100;
+  display:grid;
+  place-items:center;
+  overflow:hidden;
+  background:#000;           /* 真っ黒背景 */
+  color:#e5e7eb;
+}
+
+.intro-core{
+  text-align:center;
+}
+
+/* ロゴ：1.3秒でフェードイン */
+.intro__logo{
+  width:min(360px, 70vw);
+  height:auto;
+  opacity:0;
+  transform:translateY(8px);
+  animation:introLogo 1.3s ease-out forwards .1s;
+}
+
+@keyframes introLogo{
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+/* ライン型ローディングバー */
+.intro__bar{
+  position:relative;
+  width:160px;
+  max-width:60vw;
+  height:2px;
+  border-radius:9999px;
+  background:rgba(148,163,184,.35);
+  overflow:hidden;
+  margin:1.4rem auto 0.6rem;
+}
+
+.intro__bar-inner{
+  position:absolute;
+  inset:0;
+  transform-origin:left;
+  transform:scaleX(0);
+  background:linear-gradient(90deg,#e5e7eb,#a5b4fc);
+  animation:introBar 1.4s ease-out .9s forwards;  /* ロゴのあとに走る */
+}
+
+@keyframes introBar{
+  from{ transform:scaleX(0); }
+  to{   transform:scaleX(1); }
+}
+
+/* 下の「Loading」テキスト */
+.intro__text{
+  font-size:0.75rem;
+  letter-spacing:.28em;
+  text-transform:uppercase;
+  color:#9ca3af;
+}
+    /* NEW: loader feel */
+    .intro__spinner{
+      width:54px; height:54px; border-radius:9999px;
+      border:3px solid rgba(148,163,184,.5);
+      border-top-color:var(--accent-from);
+      border-right-color:var(--accent-to);
+      margin:0 auto 1.5rem;
+      animation:spin 1s linear infinite;
+    }
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    /* ===== SUB PAGE LOADER ===== */
+    .subintro{
+      position:fixed; inset:0; z-index:50; display:grid; place-items:center;
+      background:radial-gradient(circle at top, rgba(15,23,42,.96), #020617);
+      color:#e5e7eb;
+    }
+    .subintro-card{
+      padding:1.75rem 2.25rem;
+      border-radius:1.5rem;
+      background:rgba(15,23,42,.75);
+      box-shadow:0 18px 45px rgba(0,0,0,.65);
+      border:1px solid rgba(148,163,184,.4);
+      text-align:center;
+      max-width:320px;
+      width:90%;
+    }
+    .subintro-spinner{
+      width:46px;height:46px;border-radius:9999px;
+      border:3px solid rgba(148,163,184,.5);
+      border-top-color:var(--accent-to);
+      margin:0 auto 1rem;
+      animation:spin 1s linear infinite;
+    }
+    .subintro-logo{
+      width:56px;height:56px;border-radius:1.25rem;
+      object-fit:cover;margin:0 auto .25rem;
+    }
+
+    /* ===== HEADER / safe-area ===== */
+    header{padding-top:env(safe-area-inset-top); min-height:56px}
 
     /* ===== HERO ===== */
-    .hero{position:relative; height:100vh; overflow:hidden}
+    .hero{position:relative; height:100svh; overflow:hidden}
     .hero img.bg{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0; transform:scale(1.06); transition:opacity 1s ease, transform 4.8s ease}
     .hero img.bg.active{opacity:1; transform:scale(1)}
     .hero .scrim{position:absolute; inset:0; background:linear-gradient(180deg, rgba(2,6,23,.35) 0%, rgba(2,6,23,.45) 60%, rgba(2,6,23,.25) 100%)}
+
+    /* 見出しは明朝、本文はサンセリフ */
+    h1,h2,h3,.display,.subtab{
+      font-family: 'Shippori Mincho','Noto Sans JP',system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial;
+      letter-spacing:.01em;
+    }
+    /* HERO見出し：スマホで自然改行＋はみ出し防止 */
+    .hero h1{
+      font-weight:700;
+      font-size:clamp(1.6rem, 7.5vw, 2.6rem);
+      line-height:1.25;
+      text-wrap:balance;
+      word-break:keep-all;
+      padding:0 1rem;
+    }
+    .hero p{font-size:clamp(.95rem,3.8vw,1.1rem); line-height:1.8}
 
     /* Fancy gradient border */
     .g-border{position:relative}
@@ -56,33 +214,109 @@
     /* Marquee */
     @keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
     .marquee{display:flex; gap:16px; animation:marquee 22s linear infinite}
+
+    /* ===== 横スクロール・サブナビ（デバイス/専売品） ===== */
+    .subnav{position:sticky; top:0; z-index:30; background:rgba(255,255,255,.92); backdrop-filter:blur(10px); border-bottom:1px solid var(--line)}
+    .subnav-inner{display:flex; gap:.5rem; overflow-x:auto; overflow-y:hidden; scrollbar-width:none; -ms-overflow-style:none; padding:.5rem .75rem}
+    .subnav-inner::-webkit-scrollbar{display:none}
+    .subtab{
+      white-space:nowrap; padding:.55rem .95rem; border-radius:9999px; border:1px solid var(--line); background:#fff;
+      box-shadow:0 6px 18px rgba(2,6,23,.06);
+      transition:transform .25s ease, box-shadow .25s ease, opacity .25s ease;
+    }
+    .subtab:active{transform:translateY(1px) scale(.99)}
+    .subnav-mask{position:relative}
+    .subnav-mask::before,.subnav-mask::after{content:''; position:absolute; top:0; bottom:0; width:36px; pointer-events:none}
+    .subnav-mask::before{left:0; background:linear-gradient(90deg,#fff,transparent)}
+    .subnav-mask::after{right:0; background:linear-gradient(270deg,#fff,transparent)}
+
+    /* ===== LINE FAB ===== */
+    .line-fab{
+      position:fixed;
+      right:16px;
+      bottom:16px;
+      padding:0.7rem 1.25rem;
+      border-radius:9999px;
+      background:var(--line-green);
+      color:#fff;
+      font-weight:700;
+      font-size:.9rem;
+      display:flex;
+      align-items:center;
+      gap:.4rem;
+      box-shadow:0 16px 34px rgba(6,199,85,.55);
+      z-index:45;
+      border:none;
+      cursor:pointer;
+      transform-origin:center;
+      animation:linePulse 2.4s ease-in-out infinite;
+    }
+    .line-fab span.icon{
+      display:inline-flex;
+      width:22px;height:22px;
+      border-radius:9999px;
+      background:#fff;
+      color:var(--line-green);
+      align-items:center;
+      justify-content:center;
+      font-size:.8rem;
+      font-weight:900;
+    }
+    @keyframes linePulse{
+      0%,100%{transform:translateY(0) scale(1);}
+      40%{transform:translateY(-4px) scale(1.04);}
+      70%{transform:translateY(0) scale(.98);}
+    }
+
+    @media (max-width:640px){
+      .line-fab{
+        right:12px;
+        bottom:calc(12px + env(safe-area-inset-bottom));
+        padding:0.6rem 1rem;
+      }
+    }
   </style>
 </head>
 
-<body>
+<body style="opacity:0;">
   <!-- INTRO: HOME -->
-  <div x-cloak x-show="state.showIntroHome && state.route==='home'" class="intro intro__grain">
-    <div class="intro__ring"></div>
-    <div class="text-center">
-      <div class="intro__word intro__word--gradient intro__letters">
-        <span>V</span><span>e</span><span>r</span><span>v</span><span>i</span><span>i</span><span>i</span>
-        <div class="intro__shine"></div>
-      </div>
-      <p class="mt-2 text-sm text-[var(--muted)]">Initialize design system…</p>
+  <div x-cloak x-show="state.showIntroHome && state.route==='home'" class="intro">
+  <div class="intro-core">
+    <!-- ロゴ画像（背景透過） -->
+    <img src="/mnt/data/名称未設定のデザイン.png"
+         alt="Verviii"
+         class="intro__logo">
+
+    <!-- ライン型ローディングバー -->
+    <div class="intro__bar">
+      <div class="intro__bar-inner"></div>
     </div>
+
+    <p class="intro__text">Loading interface…</p>
   </div>
+</div>
 
   <!-- INTRO: DEVICE / EXCLUSIVE -->
-  <div x-cloak x-show="state.showIntroDevice && state.route==='device'" class="fixed inset-0 z-50 grid place-items-center bg-gradient-to-b from-white to-slate-50">
-    <div class="text-center"><img :src="data.device.brand.logo" class="mx-auto w-24 h-24 object-contain" alt="Photomedicell"><p class="mt-4 text-sm text-[var(--muted)]">Photomedicell ページを準備中…</p></div>
+  <div x-cloak x-show="state.showIntroDevice && state.route==='device'" class="subintro">
+    <div class="subintro-card">
+      <div class="subintro-spinner"></div>
+      <img :src="data.device.brand.logo" class="subintro-logo object-contain" alt="Photomedicell">
+      <p class="mt-1 text-xs uppercase tracking-[.25em] text-slate-400">LOADING</p>
+      <p class="mt-1 text-sm text-slate-200 font-semibold">Photomedicell ページを読み込み中…</p>
+    </div>
   </div>
-  <div x-cloak x-show="state.showIntroEx && state.route==='exclusive'" class="fixed inset-0 z-50 grid place-items-center bg-gradient-to-b from-white to-slate-50">
-    <div class="text-center"><img :src="data.exclusive.brand.logo" class="mx-auto w-24 h-24 object-contain" alt="Exclusive"><p class="mt-4 text-sm text-[var(--muted)]">専売品ページを準備中…</p></div>
+  <div x-cloak x-show="state.showIntroEx && state.route==='exclusive'" class="subintro">
+    <div class="subintro-card">
+      <div class="subintro-spinner"></div>
+      <img :src="data.exclusive.brand.logo" class="subintro-logo object-contain" alt="Exclusive">
+      <p class="mt-1 text-xs uppercase tracking-[.25em] text-slate-400">LOADING</p>
+      <p class="mt-1 text-sm text-slate-200 font-semibold">専売品ページを読み込み中…</p>
+    </div>
   </div>
 
   <!-- HEADER -->
   <header class="fixed inset-x-0 top-0 z-40 backdrop-blur bg-white/70 border-b">
-    <div class="container py-3 flex items-center justify-between">
+    <div class="container py-3 pr-safe flex items-center justify-between">
       <button @click="backHome()" class="flex items-center gap-2" aria-label="ホームに戻る">
         <img :src="state.route==='home' ? data.brand.sampleLogoSquare : (state.route==='device' ? data.device.brand.logo : data.exclusive.brand.logo)" class="w-9 h-9 object-contain" alt="logo">
         <span class="hidden md:inline-block font-bold tracking-tight">Verviii</span>
@@ -98,17 +332,12 @@
         </template>
         <template x-if="state.route!=='home'">
           <div class="flex items-center gap-4">
-            <button @click.prevent="scrollToId('section-intro')" class="hover:underline">商品紹介</button>
-            <button @click.prevent="scrollToId('reasons')" class="hover:underline">選ばれる理由</button>
-            <button @click.prevent="scrollToId('sales')" class="hover:underline">売上変化</button>
-            <button @click.prevent="scrollToId('records')" class="hover:underline">導入実績</button>
-            <button @click.prevent="scrollToId('services')" class="hover:underline">その他サービス</button>
-            <button @click.prevent="scrollToId('faq')" class="hover:underline">FAQ</button>
+            <!-- 詳細ページ側はヘッダーはシンプルに「戻る」のみ -->
             <button class="px-3 py-1 rounded-full border" @click="backHome()">← 戻る</button>
           </div>
         </template>
       </nav>
-      <div class="md:hidden flex items-center gap-2">
+      <div class="md:hidden flex items-center gap-2 header-icons">
         <button @click="openContact()" class="p-2 rounded-md hover:bg-slate-100" aria-label="問い合わせ">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8m-18 8v-8a2 2 0 012-2h14a2 2 0 012 2v8"/></svg>
         </button>
@@ -118,6 +347,7 @@
         </button>
       </div>
     </div>
+    <!-- モバイル・ドロワー -->
     <div x-cloak x-show="state.mobileNav" x-transition class="md:hidden border-t bg-white/95">
       <div class="px-4 py-3 space-y-2" x-show="state.route==='home'">
         <button @click.prevent="state.mobileNav=false; scrollToId('equipments')" class="block">美容機器</button>
@@ -128,10 +358,9 @@
       <div class="px-4 py-3 space-y-2" x-show="state.route!=='home'">
         <button @click.prevent="state.mobileNav=false; scrollToId('section-intro')" class="block">商品紹介</button>
         <button @click.prevent="state.mobileNav=false; scrollToId('reasons')" class="block">選ばれる理由</button>
-        <button @click.prevent="state.mobileNav=false; scrollToId('sales')" class="block">売上変化</button>
         <button @click.prevent="state.mobileNav=false; scrollToId('records')" class="block">導入実績</button>
         <button @click.prevent="state.mobileNav=false; scrollToId('services')" class="block">その他サービス</button>
-        <button @click.prevent="state.mobileNav=false; scrollToId('faq')" class="block">FAQ</button>
+        <button @click.prevent="state.mobileNav=false; scrollTop" class="hidden"></button>
         <button @click.prevent="state.mobileNav=false; backHome()" class="block">← 戻る</button>
       </div>
     </div>
@@ -145,17 +374,20 @@
       </template>
       <div class="scrim"></div>
       <div class="relative z-10 h-full grid place-items-center px-6 text-center text-white">
-        <div class="max-w-3xl">
-          <img :src="data.brand.sampleLogoWord" alt="Verviii" class="mx-auto w-[520px] max-w-[86%] h-auto mb-6 drop-shadow-xl reveal" :class="{'in':state.revealed}">
-          <h1 class="font-[Poppins] text-4xl md:text-6xl leading-tight reveal" :class="{'in':state.revealed}">結果と収益を、最短で。</h1>
-          <p class="mt-3 text-white/90 reveal" :class="{'in':state.revealed}">直販×工場提携で“高性能を適正価格”に。導入から運用までワンストップで支援します。</p>
-        </div>
-      </div>
-      <div class="absolute right-4 bottom-6 flex gap-2 z-20">
-        <template x-for="(img,i) in data.hero.images" :key="'h-dot'+i">
-          <button class="w-3 h-3 rounded-full bg-white/60" :class="{'bg-white': state.heroIndex===i}" @click="state.heroIndex=i"></button>
-        </template>
-      </div>
+  <div class="max-w-3xl mx-auto">
+    <div class="hero-logo-wrap mb-6">
+      <img src="/mnt/data/名称未設定のデザイン.png"
+           alt="Verviii"
+           class="mx-auto w-[480px] max-w-[80%] h-auto drop-shadow-2xl hero-logo">
+    </div>
+    <h1 class="display leading-tight reveal" :class="{'in':state.revealed}">
+      結果と収益を最短で。
+    </h1>
+    <p class="mt-3 text-white/90 reveal" :class="{'in':state.revealed}">
+      直販×工場提携で“高性能を適正価格”に。導入から運用までワンストップで支援します。
+    </p>
+  </div>
+</div>
     </section>
 
     <!-- HOME CONTENT -->
@@ -203,7 +435,7 @@
                   <div class="text-sm text-[var(--muted)]" x-text="p.name"></div>
                   <div class="text-base" x-text="p.features"></div>
                 </div>
-                <button class="px-4 py-2 rounded-full bg-gradient-to-r from-[var(--accent-from)] to-[var(--accent-to)] text-white font-semibold" @click="goExclusive(p)">詳細</button>
+                <button class="px-4 py-2 rounded-full bg-gradient-to-r from-[var(--accent-from)] to-[var(--accent-to)] text-white font-semibold" @click="goExclusive(p)">詳細を見る</button>
               </div>
             </template>
           </div>
@@ -240,17 +472,16 @@
       </div>
     </section>
 
-    <div class="sticky top-0 z-30 border-b bg-white/90 backdrop-blur">
-      <div class="container py-3 flex items-center justify-between">
-        <nav class="flex gap-4 text-sm">
-          <button @click.prevent="scrollToId('section-intro')" class="hover:underline">商品紹介</button>
-          <button @click.prevent="scrollToId('reasons')" class="hover:underline">選ばれる理由</button>
-          <button @click.prevent="scrollToId('sales')" class="hover:underline">売上変化</button>
-          <button @click.prevent="scrollToId('records')" class="hover:underline">導入実績</button>
-          <button @click.prevent="scrollToId('services')" class="hover:underline">その他サービス</button>
-          <button @click.prevent="scrollToId('faq')" class="hover:underline">FAQ</button>
-        </nav>
-        <button class="px-3 py-1 rounded-full border" @click="backHome()">← 戻る</button>
+    <!-- 横スクロール・サブナビ（上側だけ残す） -->
+    <div class="subnav" x-transition>
+      <div class="subnav-mask">
+        <div class="subnav-inner">
+          <button class="subtab" @click.prevent="scrollToId('section-intro')">商品紹介</button>
+          <button class="subtab" @click.prevent="scrollToId('reasons')">選ばれる理由</button>
+          <button class="subtab" @click.prevent="scrollToId('records')">導入実績</button>
+          <button class="subtab" @click.prevent="scrollToId('services')">その他サービス</button>
+          <button class="subtab" @click="backHome()">← 戻る</button>
+        </div>
       </div>
     </div>
 
@@ -263,7 +494,7 @@
             <h3 class="font-bold" x-text="card.name"></h3>
             <div class="text-sm text-[var(--muted)]" x-text="card.tag"></div>
             <div class="mt-2 text-xl font-bold" x-text="formatJPY(card.price)"></div>
-            <button class="mt-4 w-full px-3 py-2 rounded-full bg-gradient-to-r from-[var(--accent-from)] to-[var(--accent-to)] text-white">詳細</button>
+            <button class="mt-4 w-full px-3 py-2 rounded-full bg-gradient-to-r from-[var(--accent-from)] to-[var(--accent-to)] text-white" @click="openProductModal(card, 'device')">詳細を見る</button>
           </article>
         </template>
       </div>
@@ -283,26 +514,23 @@
       </div>
     </section>
 
-    <section id="sales" class="container py-12">
-      <h2 class="text-3xl font-bold mb-2">導入後の売上変化</h2>
-      <p class="text-[var(--muted)] mb-6">新メニュー追加と客単価上昇により売上増加（サンプル）。</p>
-      <div class="p-6 rounded-2xl bg-white border shadow-sm">
-        <svg class="w-full h-60" viewBox="0 0 600 240" preserveAspectRatio="none" x-ref="chart"></svg>
-        <div class="mt-3 text-xs text-[var(--muted)]">※サンプルデータ。実数値に差し替え可能</div>
-      </div>
-    </section>
+    <!-- 売上変化セクションは削除 -->
 
-    <section id="records" class="container py-12">
-      <h2 class="text-3xl font-bold mb-4">導入実績</h2>
-      <div class="overflow-hidden rounded-2xl bg-white border p-4">
+    <section id="records" class="container py-20">
+      <h2 class="text-3xl md:text-4xl font-bold mb-4 text-center">導入実績</h2>
+      <p class="text-[var(--muted)] mb-6 text-center text-sm md:text-base">現場の声をもとにアップデートを続けています。</p>
+      <div class="overflow-hidden rounded-3xl bg-white border shadow-soft p-6 md:p-8">
         <div class="marquee">
           <template x-for="c in [...data.device.records, ...data.device.records]" :key="c.company + Math.random()">
-            <article class="min-w-[260px] max-w-[320px] border rounded-xl p-4 bg-white">
+            <article class="min-w-[280px] max-w-[340px] border rounded-2xl p-5 bg-white/95 shadow-sm">
               <div class="flex items-center gap-3">
-                <img :src="c.image" class="w-12 h-12 rounded object-cover" alt="">
-                <div><div class="font-bold" x-text="c.company"></div><div class="text-xs text-[var(--muted)]" x-text="c.role"></div></div>
+                <img :src="c.image" class="w-14 h-14 rounded-xl object-cover" alt="">
+                <div>
+                  <div class="font-bold" x-text="c.company"></div>
+                  <div class="text-xs text-[var(--muted)]" x-text="c.role"></div>
+                </div>
               </div>
-              <p class="text-sm mt-3 text-[var(--ink)]/80" x-text="c.comment"></p>
+              <p class="text-sm mt-3 text-[var(--ink)]/80 leading-relaxed" x-text="c.comment"></p>
             </article>
           </template>
         </div>
@@ -352,17 +580,17 @@
       </div>
     </section>
 
-    <div class="sticky top-0 z-30 border-b bg-white/90 backdrop-blur">
-      <div class="container py-3 flex items-center justify-between">
-        <nav class="flex gap-4 text-sm">
-          <button @click.prevent="scrollToId('section-intro')" class="hover:underline">商品紹介</button>
-          <button @click.prevent="scrollToId('reasons')" class="hover:underline">選ばれる理由</button>
-          <button @click.prevent="scrollToId('sales')" class="hover:underline">売上変化</button>
-          <button @click.prevent="scrollToId('records')" class="hover:underline">導入実績</button>
-          <button @click.prevent="scrollToId('services')" class="hover:underline">その他サービス</button>
-          <button @click.prevent="scrollToId('faq')" class="hover:underline">FAQ</button>
-        </nav>
-        <button class="px-3 py-1 rounded-full border" @click="backHome()">← 戻る</button>
+    <!-- 横スクロール・サブナビ -->
+    <div class="subnav" x-transition>
+      <div class="subnav-mask">
+        <div class="subnav-inner">
+          <button class="subtab" @click.prevent="scrollToId('section-intro')">商品紹介</button>
+          <button class="subtab" @click.prevent="scrollToId('reasons')">選ばれる理由</button>
+          <button class="subtab" @click.prevent="scrollToId('records')">導入実績</button>
+          <button class="subtab" @click.prevent="scrollToId('services')">その他サービス</button>
+          <button class="subtab" @click.prevent="scrollToId('faq')">FAQ</button>
+          <button class="subtab" @click="backHome()">← 戻る</button>
+        </div>
       </div>
     </div>
 
@@ -374,6 +602,7 @@
             <img :src="p.image" class="w-full h-40 object-cover rounded-xl mb-3" alt="">
             <h3 class="font-bold" x-text="p.name"></h3>
             <p class="text-sm text-[var(--muted)]" x-text="p.desc"></p>
+            <button class="mt-4 w-full px-3 py-2 rounded-full bg-gradient-to-r from-[var(--accent-from)] to-[var(--accent-to)] text-white" @click="openProductModal(p, 'exclusive')">詳細を見る</button>
           </article>
         </template>
       </div>
@@ -393,26 +622,20 @@
       </div>
     </section>
 
-    <section id="sales" class="container py-12">
-      <h2 class="text-3xl font-bold mb-2">導入後の売上変化</h2>
-      <p class="text-[var(--muted)] mb-6">店販導入で客単価・LTV が上がった想定（サンプル）。</p>
-      <div class="p-6 rounded-2xl bg-white border shadow-sm">
-        <svg class="w-full h-60" viewBox="0 0 600 240" preserveAspectRatio="none" x-ref="chart2"></svg>
-        <div class="mt-3 text-xs text-[var(--muted)]">※サンプルデータ。実数値に差し替え可能</div>
-      </div>
-    </section>
+    <!-- 売上変化セクションは削除 -->
 
-    <section id="records" class="container py-12">
-      <h2 class="text-3xl font-bold mb-4">導入実績</h2>
-      <div class="overflow-hidden rounded-2xl bg-white border p-4">
+    <section id="records" class="container py-20">
+      <h2 class="text-3xl md:text-4xl font-bold mb-4 text-center">導入実績</h2>
+      <p class="text-[var(--muted)] mb-6 text-center text-sm md:text-base">専売品と機器のセット導入が増えています。</p>
+      <div class="overflow-hidden rounded-3xl bg-white border shadow-soft p-6 md:p-8">
         <div class="marquee">
           <template x-for="c in [...data.device.records, ...data.device.records]" :key="'ex-'+Math.random()">
-            <article class="min-w-[260px] max-w-[320px] border rounded-xl p-4 bg-white">
+            <article class="min-w-[280px] max-w-[340px] border rounded-2xl p-5 bg-white/95 shadow-sm">
               <div class="flex items-center gap-3">
-                <img :src="c.image" class="w-12 h-12 rounded object-cover" alt="">
+                <img :src="c.image" class="w-14 h-14 rounded-xl object-cover" alt="">
                 <div><div class="font-bold" x-text="c.company"></div><div class="text-xs text-[var(--muted)]" x-text="c.role"></div></div>
               </div>
-              <p class="text-sm mt-3 text-[var(--ink)]/80" x-text="c.comment"></p>
+              <p class="text-sm mt-3 text-[var(--ink)]/80 leading-relaxed" x-text="c.comment"></p>
             </article>
           </template>
         </div>
@@ -443,9 +666,34 @@
           </div>
         </template>
       </div>
-      <div class="text-center py-8"><button class="px-4 py-2 rounded-full border" @click="backHome()">← 戻る</button></div>
+      <div class="text-center py-8"><button class="subtab" @click="backHome()">← 戻る</button></div>
     </section>
   </main>
+
+  <!-- 商品詳細モーダル -->
+  <div x-cloak x-show="state.showProductModal" x-transition.opacity class="fixed inset-0 z-50 grid place-items-center p-4" role="dialog" aria-modal="true">
+    <div class="absolute inset-0 bg-black/40" @click="closeProductModal()"></div>
+    <div class="relative w-full max-w-xl rounded-2xl glass shadow-soft border p-6 bg-white" x-ref="productModal">
+      <div class="flex flex-col md:flex-row gap-4">
+        <div class="md:w-2/5">
+          <img :src="productModal.image" alt="" class="w-full h-40 md:h-full object-cover rounded-xl">
+        </div>
+        <div class="md:w-3/5">
+          <h3 class="text-xl font-bold" x-text="productModal.name"></h3>
+          <p class="mt-1 text-xs uppercase tracking-[.25em] text-[var(--muted)]" x-text="productModal.category"></p>
+          <p class="mt-3 text-sm text-[var(--muted)] leading-relaxed" x-text="productModal.desc"></p>
+          <template x-if="productModal.price">
+            <div class="mt-3 text-lg font-bold" x-text="formatJPY(productModal.price)"></div>
+          </template>
+          <div class="mt-4 flex flex-wrap gap-2">
+            <button class="px-4 py-2 rounded-full bg-gradient-to-r from-[var(--accent-from)] to-[var(--accent-to)] text-white font-semibold text-sm" @click="openContact()">お問い合わせ</button>
+            <button type="button" class="px-4 py-2 rounded-full border text-sm" @click="openLine()">LINEで連絡</button>
+          </div>
+        </div>
+      </div>
+      <button class="absolute top-3 right-3 text-[var(--muted)]" @click="closeProductModal()" aria-label="モーダルを閉じる">✕</button>
+    </div>
+  </div>
 
   <!-- 問い合わせモーダル -->
   <div x-cloak x-show="state.showModal" x-transition.opacity class="fixed inset-0 z-50 grid place-items-center p-4" role="dialog" aria-modal="true">
@@ -476,15 +724,52 @@
     </div>
   </div>
 
-  <footer class="mt-16 border-t" style="border-color:var(--line)">
+  <!-- Follow Us（全ページ共通でフッター直前） -->
+  <section class="mt-16 bg-slate-950 text-white">
+    <div class="container py-10 flex flex-col md:flex-row items-center justify-between gap-6">
+      <div>
+        <h2 class="text-xl md:text-2xl font-bold tracking-wide">Follow Us</h2>
+        <p class="text-sm text-white/70 mt-1">最新の導入事例・キャンペーン情報を配信中。</p>
+      </div>
+      <div class="flex gap-4">
+        <a :href="data.links.instagram" target="_blank" rel="noopener" class="flex items-center gap-2 px-4 py-2 rounded-full border border-white/25 bg-white/5 hover:bg-white/10 transition">
+          <svg viewBox="0 0 24 24" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.6">
+            <rect x="3" y="3" width="18" height="18" rx="5" ry="5"></rect>
+            <circle cx="12" cy="12" r="4"></circle>
+            <circle cx="17" cy="7" r="1.1" fill="currentColor"></circle>
+          </svg>
+          <span class="text-sm font-semibold">Instagram</span>
+        </a>
+        <a :href="data.links.tiktok" target="_blank" rel="noopener" class="flex items-center gap-2 px-4 py-2 rounded-full border border-white/25 bg-white/5 hover:bg-white/10 transition">
+          <svg viewBox="0 0 24 24" class="w-5 h-5" fill="currentColor">
+            <path d="M15.5 4.5c.6.7 1.4 1.3 2.3 1.7.4.2.8.3 1.2.4v3a5.9 5.9 0 0 1-3.5-1.2v5.9A5.7 5.7 0 0 1 9.9 20 5.7 5.7 0 0 1 4.3 14.4 5.7 5.7 0 0 1 10 8.8c.4 0 .8 0 1.1.1v3A2.7 2.7 0 0 0 10 11.6a2.8 2.8 0 1 0 2.8 2.8V4.5h2.7z"/>
+          </svg>
+          <span class="text-sm font-semibold">TikTok</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="border-t" style="border-color:var(--line)">
     <div class="container text-center text-xs text-[var(--muted)] py-8">© <span x-text="new Date().getFullYear()"></span> Verviii.</div>
   </footer>
+
+  <!-- 右下 LINE FAB -->
+  <button class="line-fab" @click="openLine()">
+    <span class="icon">L</span>
+    <span>ラインで連絡</span>
+  </button>
 
   <!-- DATA -->
   <script id="data" type="application/json">
   {
     "meta": {"title":"Verviii | プロ機器＆専売品","description":"次世代の結果と収益化を両立する、サロン向けプロ機器＆専売品。直販・工場提携で高品質を適正価格で。"},
-    "links": {"line":"https://line.me/R/ti/p/@verviii_official","tel":"0120000000"},
+    "links": {
+      "line":"https://line.me/R/ti/p/@verviii_official",
+      "tel":"0120000000",
+      "instagram":"https://instagram.com/your_account",
+      "tiktok":"https://www.tiktok.com/@your_account"
+    },
     "brand": {
       "sampleLogoSquare":"https://images.unsplash.com/photo-1520975916090-3105956dac38?q=80&w=256&auto=format&fit=crop",
       "sampleLogoWord":"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 240'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='0'><stop offset='0%' stop-color='%237c3aed'/><stop offset='100%' stop-color='%2306b6d4'/></linearGradient></defs><rect width='1200' height='240' fill='none'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-family='Poppins, sans-serif' font-size='160' font-weight='900' fill='url(%23g)'>Verviii</text></svg>"
@@ -588,14 +873,18 @@
         state:{
           route:'home',
           showIntroHome:true, showIntroDevice:false, showIntroEx:false,
-          showModal:false, heroIndex:0, heroIndex2:0, heroIndex3:0,
+          showModal:false, showProductModal:false,
+          heroIndex:0, heroIndex2:0, heroIndex3:0,
           eqIndex:0, prIndex:0, faqIndex:-1, mobileNav:false,
           revealed:false, revealDevice:false, revealExclusive:false
         },
         form:{name:'', company:'', email:'', tel:'', when:'未定', body:''},
         data: {},
+        productModal:{name:'',category:'',desc:'',price:null,image:''},
 
         init(){
+            document.body.style.opacity = "1";
+
           // JSONを安全に読み込む
           try{
             const raw = document.getElementById('data')?.textContent || '{}';
@@ -611,7 +900,7 @@
           setTimeout(()=>{
             this.state.showIntroHome = false;
             this.state.revealed = true;
-          }, 2800);
+          }, 3400);
 
           // スライドの自動切替
           this.cycle(()=>this.state.heroIndex, v=>this.state.heroIndex=v, this.data.hero.images.length, 4200);
@@ -620,7 +909,7 @@
           this.cycle(()=>this.state.eqIndex, v=>this.state.eqIndex=v, this.data.equipments.carousel.length, 3000);
           this.cycle(()=>this.state.prIndex, v=>this.state.prIndex=v, this.data.exclusives.carousel.length, 3000);
 
-          // チャート描画
+          // チャート描画（売上セクションは今回は非表示だが関数は保険で残す）
           this.$nextTick(()=>{ this.drawChart(); this.drawChart2(); });
           window.addEventListener('resize', ()=>{ this.drawChart(); this.drawChart2(); });
 
@@ -653,7 +942,7 @@
           setTimeout(() => {
             this.state.showIntroHome = false;
             this.state.revealed = true;
-          }, 2800);
+          }, 3400);
         },
 
         goDevice(item){
@@ -683,6 +972,31 @@
         },
 
         toggleFaq(i){ this.state.faqIndex = (this.state.faqIndex===i ? -1 : i) },
+
+        openProductModal(item, kind){
+          if(kind === 'device'){
+            this.productModal = {
+              name: item.name,
+              category: item.tag || 'Device',
+              desc: 'Photomedicell用オプション。詳細なスペックはお問い合わせください。',
+              price: item.price || null,
+              image: item.image
+            };
+          }else{
+            this.productModal = {
+              name: item.name,
+              category: 'Exclusive Line',
+              desc: item.desc || 'サロン専売ライン。導入条件などはお問い合わせください。',
+              price: null,
+              image: item.image
+            };
+          }
+          this.state.showProductModal = true;
+          this.$nextTick(()=>{ const first=this.$refs.productModal?.querySelector('button'); first&&first.focus(); });
+        },
+        closeProductModal(){
+          this.state.showProductModal = false;
+        },
 
         drawChart(){
           const svg=this.$refs.chart; if(!svg) return;
